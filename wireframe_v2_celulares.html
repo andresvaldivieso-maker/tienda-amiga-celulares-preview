@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe v2 — Landing Celulares · Tienda Amiga</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --bg: #0F1120;
+  --surface: #161929;
+  --surface2: #1E2235;
+  --border: #ffffff0f;
+  --border2: #ffffff18;
+  --text: #CCD6F6;
+  --muted: #6B7A99;
+  --navy: #1B3A8C;
+  --navy-light: #2347B0;
+  --yellow: #F0A500;
+  --yellow-light: #FFF3CC;
+  --green: #1E9E6A;
+  --red: #D94040;
+  --wire-dark: #2A3150;
+  --wire-mid: #3A4570;
+  --wire-light: #4A5580;
+  --wire-lighter: #5A6590;
+  --wire-block: #CDD2E0;
+  --wire-img: #8892AA;
+  --white-page: #F4F5F8;
+}
+
+body {
+  font-family: 'DM Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  padding: 40px 20px 80px;
+}
+
+/* ── DOC HEADER ── */
+.doc-header {
+  max-width: 1240px; margin: 0 auto 32px;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  border-bottom: 1px solid var(--border2); padding-bottom: 20px;
+}
+.doc-header h1 { font-family:'Syne',sans-serif; font-size:26px; font-weight:800; color:#fff; }
+.doc-header p { font-size:11px; color:var(--muted); margin-top:5px; }
+.version-badge { background:var(--yellow); color:#000; font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; font-family:'Syne',sans-serif; }
+
+/* ── LAYOUT ── */
+.master-grid {
+  max-width: 1240px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 380px; gap: 28px; align-items: start;
+}
+
+/* ── SCREEN WRAPPER ── */
+.screen-wrap { position: relative; }
+.screen-chrome {
+  background: #1A1D2E; border-radius: 14px; overflow: hidden;
+  box-shadow: 0 24px 80px #00000080;
+  border: 1px solid var(--border2);
+}
+.chrome-bar {
+  background: #252840; height: 36px;
+  display: flex; align-items: center; gap: 8px; padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+}
+.chrome-dot { width: 11px; height: 11px; border-radius: 50%; }
+.chrome-url {
+  flex: 1; height: 22px; background: #1A1D2E; border-radius: 4px;
+  display: flex; align-items: center; padding: 0 10px;
+  font-size: 10px; color: var(--muted); margin: 0 12px;
+}
+.chrome-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+/* ── PAGE BG ── */
+.page { background: var(--white-page); }
+
+/* ── SECTION MARKER ── */
+.sec-marker {
+  background: var(--navy); color: #fff;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 3px 10px; display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'DM Mono', monospace;
+}
+.sec-marker span { background: var(--yellow); color: #000; width: 16px; height: 16px; border-radius: 50%; display:flex;align-items:center;justify-content:center; font-weight:700; font-size:9px; }
+
+/* ═══════════════════════════
+   SECCIÓN 0 — HOME ENTRY POINT
+═══════════════════════════ */
+.home-entry-section { margin-bottom: 2px; }
+.home-entry-label {
+  background: #E8EBF5; padding: 6px 14px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 9px; color: #7A8299; border-bottom: 1px solid #D0D4E0;
+}
+.home-entry-label strong { color: #2D3A6B; font-size: 10px; }
+.home-hero-strip {
+  background: #fff; padding: 12px 16px;
+  display: grid; grid-template-columns: 1fr 280px; gap: 12px;
+  border-bottom: 1px solid #E0E3EA;
+}
+.existing-hero {
+  background: #2D3A6B; border-radius: 6px; height: 80px;
+  display: flex; align-items: center; padding: 0 14px; gap: 12px;
+}
+.eh-text { flex: 1; }
+.eh-line { height: 8px; background: rgba(255,255,255,0.5); border-radius: 2px; margin-bottom: 4px; }
+.eh-line2 { height: 8px; background: rgba(255,255,255,0.3); border-radius: 2px; width: 60%; }
+.eh-img { width: 60px; height: 60px; background: rgba(255,255,255,0.15); border-radius: 4px; display:flex;align-items:center;justify-content:center; font-size:8px;color:rgba(255,255,255,0.4); }
+
+.cell-entry-banner {
+  background: linear-gradient(135deg, #0A0A0A 0%, #1A1A2E 50%, #16213E 100%);
+  border-radius: 6px; height: 80px;
+  display: flex; align-items: center; padding: 0 14px; gap: 12px;
+  position: relative; overflow: hidden; cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.cell-entry-banner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 80% 50%, rgba(100,120,255,0.15) 0%, transparent 70%);
+}
+.cell-badge-new {
+  position: absolute; top: 8px; right: 8px;
+  background: var(--yellow); color: #000;
+  font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 3px;
+  font-family: 'Syne',sans-serif;
+}
+.cell-entry-img { width: 55px; height: 55px; background: rgba(255,255,255,0.08); border-radius: 4px; display:flex;align-items:center;justify-content:center; font-size:18px; position:relative;z-index:1; }
+.cell-entry-text { flex: 1; position: relative; z-index: 1; }
+.cell-entry-eyebrow { height: 7px; background: var(--yellow); border-radius: 2px; width: 60px; margin-bottom: 5px; }
+.cell-entry-title { height: 11px; background: rgba(255,255,255,0.85); border-radius: 2px; width: 140px; margin-bottom: 4px; }
+.cell-entry-sub { height: 8px; background: rgba(255,255,255,0.3); border-radius: 2px; width: 100px; }
+.cell-entry-cta {
+  background: rgba(255,255,255,0.9); color: #0A0A0A;
+  font-size: 8px; font-weight: 700; padding: 5px 10px; border-radius: 4px;
+  font-family: 'Syne',sans-serif; white-space: nowrap; position:relative;z-index:1;
+}
+
+/* ═══════════════════════════
+   LANDING CELULARES
+═══════════════════════════ */
+.landing-page { background: #000; }
+
+/* NAV LANDING */
+.landing-nav {
+  background: rgba(0,0,0,0.95); height: 44px;
+  display: flex; align-items: center; padding: 0 20px; gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: relative;
+}
+.nav-logo { display:flex;align-items:center;gap:6px; }
+.nav-logo-mark { width: 22px; height: 22px; background: #fff; border-radius: 4px; display:flex;align-items:center;justify-content:center; }
+.nav-logo-mark span { font-size:8px; font-weight:900; color:#000; font-family:'Syne',sans-serif; }
+.nav-logo-text { font-size:10px;font-weight:700;color:#fff;font-family:'Syne',sans-serif; }
+.nav-logo-sub { font-size:8px;color:rgba(255,255,255,0.4);margin-left:2px; }
+.nav-pills { display:flex;gap:0;margin-left:24px;flex:1; }
+.nav-pill-item { height:44px;display:flex;align-items:center;padding:0 12px;font-size:10px;color:rgba(255,255,255,0.6);border-bottom:2px solid transparent; }
+.nav-pill-item.active { color:#fff; border-bottom-color:#fff; }
+.nav-right { display:flex;align-items:center;gap:10px; }
+.nav-search { width:140px;height:26px;background:rgba(255,255,255,0.1);border-radius:13px;display:flex;align-items:center;padding:0 10px;gap:6px; }
+.nav-search span { font-size:9px;color:rgba(255,255,255,0.4); }
+.nav-cart { width:26px;height:26px;background:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#000; }
+
+/* HERO LANDING */
+.landing-hero {
+  height: 260px; background: #000;
+  display: grid; grid-template-columns: 1fr 1fr;
+  position: relative; overflow: hidden;
+}
+.lh-bg-gradient {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 50%, rgba(50,80,200,0.25) 0%, transparent 60%);
+}
+.lh-left { padding: 32px 24px; display:flex;flex-direction:column;justify-content:center;gap:14px;position:relative;z-index:2; }
+.lh-eyebrow {
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+  border-radius:20px;padding:3px 10px;width:fit-content;
+}
+.lh-eyebrow-dot { width:6px;height:6px;border-radius:50%;background:var(--yellow); }
+.lh-eyebrow span { font-size:9px;color:rgba(255,255,255,0.7);letter-spacing:1px;text-transform:uppercase; }
+.lh-title-1 { height:24px;background:rgba(255,255,255,0.9);border-radius:3px;width:200px; }
+.lh-title-2 { height:24px;background:rgba(255,255,255,0.6);border-radius:3px;width:160px; }
+.lh-sub { height:9px;background:rgba(255,255,255,0.25);border-radius:2px;width:220px; }
+.lh-sub2 { height:9px;background:rgba(255,255,255,0.15);border-radius:2px;width:180px; }
+.lh-ctas { display:flex;gap:8px;margin-top:4px; }
+.lh-btn-primary { height:30px;background:#fff;border-radius:6px;padding:0 16px;display:flex;align-items:center;font-size:9px;font-weight:700;color:#000;font-family:'Syne',sans-serif; }
+.lh-btn-secondary { height:30px;background:transparent;border:1px solid rgba(255,255,255,0.3);border-radius:6px;padding:0 14px;display:flex;align-items:center;font-size:9px;color:rgba(255,255,255,0.7); }
+.lh-stats { display:flex;gap:16px; }
+.lh-stat { text-align:center; }
+.lh-stat-val { font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:#fff; }
+.lh-stat-label { font-size:8px;color:rgba(255,255,255,0.4);margin-top:1px; }
+
+.lh-right { display:flex;align-items:center;justify-content:center;position:relative;z-index:2; }
+.hero-phone-mock {
+  width:100px;height:180px;background:rgba(255,255,255,0.06);
+  border-radius:16px;border:1px solid rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:rgba(255,255,255,0.3);text-align:center;
+  position:relative;
+}
+.hero-phone-mock::before {
+  content:'';position:absolute;
+  top:-30px;right:-30px;
+  width:120px;height:120px;
+  background:radial-gradient(circle,rgba(100,140,255,0.2) 0%,transparent 70%);
+  border-radius:50%;
+}
+.hero-glow { position:absolute;inset:-20px;background:radial-gradient(circle at center,rgba(80,120,255,0.15) 0%,transparent 70%);border-radius:50%; }
+.lh-dots { position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:3; }
+.lh-dot { width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25); }
+.lh-dot.active { background:#fff;width:14px;border-radius:3px; }
+
+/* BENEFIT BAR */
+.benefit-bar {
+  background:#111;border-top:1px solid rgba(255,255,255,0.06);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  height:38px;display:flex;align-items:center;padding:0 20px;gap:0;
+}
+.benefit-item { flex:1;display:flex;align-items:center;justify-content:center;gap:6px;font-size:9px;color:rgba(255,255,255,0.5); }
+.benefit-item + .benefit-item { border-left:1px solid rgba(255,255,255,0.06); }
+.benefit-dot { width:5px;height:5px;border-radius:50%;background:var(--yellow); }
+
+/* BRAND SELECTOR */
+.brand-selector { background:#fff;padding:20px; }
+.bs-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
+.bs-title { font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#0A0A0A; }
+.bs-link { font-size:9px;color:#2347B0; }
+.bs-grid { display:grid;grid-template-columns:repeat(6,1fr);gap:8px; }
+.brand-card {
+  border:1.5px solid #E8EBF2;border-radius:8px;padding:10px 6px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  cursor:pointer;transition:all 0.2s;
+}
+.brand-card.active { border-color:#0A0A0A;background:#0A0A0A; }
+.brand-logo-box { width:44px;height:26px;background:#E8EBF2;border-radius:4px;display:flex;align-items:center;justify-content:center; }
+.brand-card.active .brand-logo-box { background:rgba(255,255,255,0.12); }
+.brand-logo-box span { font-size:8px;font-weight:700;color:#4A5580;font-family:'Syne',sans-serif; }
+.brand-card.active .brand-logo-box span { color:rgba(255,255,255,0.7); }
+.brand-name { font-size:8px;color:#4A5580;font-weight:600;font-family:'Syne',sans-serif; }
+.brand-card.active .brand-name { color:#fff; }
+.brand-count { font-size:7px;color:#9AA0B0; }
+.brand-card.active .brand-count { color:rgba(255,255,255,0.4); }
+
+/* PROMO BANNERS */
+.promo-banners { background:#F4F5F8;padding:14px 20px; }
+.pb-row { display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px; }
+.promo-banner-card {
+  border-radius:8px;height:64px;padding:0 14px;
+  display:flex;align-items:center;gap:10px;overflow:hidden;position:relative;
+}
+.promo-banner-card.dark { background:#0A0A0A; }
+.promo-banner-card.blue { background:#1B3A8C; }
+.promo-banner-card.yellow { background:var(--yellow); }
+.pb-text { flex:1; }
+.pb-line1 { height:9px;border-radius:2px;width:120px;margin-bottom:4px; }
+.pb-line2 { height:7px;border-radius:2px;width:80px; }
+.promo-banner-card.dark .pb-line1 { background:rgba(255,255,255,0.7); }
+.promo-banner-card.dark .pb-line2 { background:rgba(255,255,255,0.3); }
+.promo-banner-card.blue .pb-line1 { background:rgba(255,255,255,0.8); }
+.promo-banner-card.blue .pb-line2 { background:rgba(255,255,255,0.4); }
+.promo-banner-card.yellow .pb-line1 { background:rgba(0,0,0,0.6); }
+.promo-banner-card.yellow .pb-line2 { background:rgba(0,0,0,0.3); }
+.pb-cta { height:22px;border-radius:4px;padding:0 10px;font-size:8px;font-weight:700;display:flex;align-items:center;white-space:nowrap;font-family:'Syne',sans-serif; }
+.promo-banner-card.dark .pb-cta { background:#fff;color:#000; }
+.promo-banner-card.blue .pb-cta { background:var(--yellow);color:#000; }
+.promo-banner-card.yellow .pb-cta { background:#000;color:#fff; }
+.pb-img { width:40px;height:48px;background:rgba(255,255,255,0.1);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px; }
+
+/* CREDIT MODULE */
+.credit-module {
+  background:#fff;border-top:3px solid var(--yellow);
+  padding:14px 20px;display:grid;grid-template-columns:1fr 260px;gap:14px;align-items:center;
+}
+.cm-left { }
+.cm-tag { display:inline-block;background:var(--yellow);color:#000;font-size:8px;font-weight:700;padding:2px 8px;border-radius:3px;margin-bottom:6px;font-family:'Syne',sans-serif; }
+.cm-title { height:13px;background:#0A0A0A;border-radius:2px;width:180px;margin-bottom:5px; }
+.cm-sub { height:9px;background:#CDD2E0;border-radius:2px;width:240px;margin-bottom:3px; }
+.cm-sub2 { height:9px;background:#CDD2E0;border-radius:2px;width:200px; }
+.cm-right { display:flex;gap:8px;align-items:center; }
+.cm-input { flex:1;height:36px;border-radius:6px;background:#F4F5F8;border:1.5px solid #E0E3EA;display:flex;align-items:center;padding:0 12px;font-size:9px;color:#9AA0B0; }
+.cm-btn { height:36px;background:#0A0A0A;border-radius:6px;padding:0 14px;font-size:9px;font-weight:700;color:#fff;display:flex;align-items:center;font-family:'Syne',sans-serif;white-space:nowrap; }
+
+/* FEATURED PHONES */
+.featured-section { background:#fff;padding:16px 20px; }
+.fs-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
+.fs-title { font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#0A0A0A; }
+.fs-tabs { display:flex;gap:0;border:1px solid #E0E3EA;border-radius:6px;overflow:hidden; }
+.fs-tab { height:26px;padding:0 12px;font-size:9px;display:flex;align-items:center;color:#6B7A99; }
+.fs-tab.active { background:#0A0A0A;color:#fff; }
+.fs-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:10px; }
+
+.phone-card {
+  border:1px solid #E8EBF2;border-radius:10px;overflow:hidden;
+  position:relative;background:#fff;
+}
+.phone-card-img {
+  height:110px;background:#F4F5F8;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.phone-card-img::after {
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,0,0,0.02) 10px,rgba(0,0,0,0.02) 11px);
+}
+.phone-card-img span { font-size:26px;position:relative;z-index:1; }
+.pc-badge-sale { position:absolute;top:8px;left:8px;background:#D94040;color:#fff;font-size:7px;font-weight:700;padding:2px 6px;border-radius:3px;z-index:2;font-family:'Syne',sans-serif; }
+.pc-badge-new { position:absolute;top:8px;left:8px;background:#0A0A0A;color:#fff;font-size:7px;font-weight:700;padding:2px 6px;border-radius:3px;z-index:2;font-family:'Syne',sans-serif; }
+.pc-compare { position:absolute;top:8px;right:8px;width:22px;height:22px;background:rgba(255,255,255,0.9);border-radius:50%;border:1px solid #E0E3EA;display:flex;align-items:center;justify-content:center;font-size:8px;z-index:2;cursor:pointer; }
+.pc-compare.active { background:#0A0A0A;border-color:#0A0A0A;color:#fff; }
+.pc-body { padding:10px; }
+.pc-brand { height:7px;background:#CDD2E0;border-radius:2px;width:35%;margin-bottom:4px; }
+.pc-name { height:10px;background:#0A0A0A;border-radius:2px;width:90%;margin-bottom:3px; }
+.pc-name2 { height:10px;background:#4A5580;border-radius:2px;width:70%;margin-bottom:8px; }
+.pc-specs { display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap; }
+.pc-spec { height:16px;border-radius:3px;background:#F0F2F8;border:1px solid #E0E3EA;padding:0 6px;font-size:7px;color:#2347B0;display:flex;align-items:center;font-weight:600;font-family:'Syne',sans-serif; }
+.pc-price-row { display:flex;align-items:baseline;gap:6px;margin-bottom:4px; }
+.pc-price { font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#0A0A0A; }
+.pc-price-sub { font-size:8px;color:#9AA0B0; }
+.pc-price-old { font-size:9px;color:#9AA0B0;text-decoration:line-through; height:9px;background:#CDD2E0;border-radius:2px;width:40px; }
+.pc-quota {
+  height:20px;border-radius:4px;
+  background:#FFF8E0;border:1px solid #E8C870;
+  display:flex;align-items:center;padding:0 8px;
+  font-size:8px;color:#8A6200;font-weight:600;margin-bottom:8px;
+  font-family:'Syne',sans-serif;gap:4px;
+}
+.quota-dot { width:6px;height:6px;border-radius:50%;background:var(--yellow); }
+.pc-btns { display:grid;grid-template-columns:1fr 1fr;gap:6px; }
+.pc-btn-add { height:28px;background:#0A0A0A;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;font-family:'Syne',sans-serif; }
+.pc-btn-buy { height:28px;background:var(--yellow);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#000;font-family:'Syne',sans-serif; }
+
+/* COMPARATOR */
+.comparator-section { background:#F4F5F8;padding:16px 20px;border-top:2px solid #E0E3EA; }
+.comp-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:12px; }
+.comp-title { font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#0A0A0A; }
+.comp-close { font-size:9px;color:#2347B0; }
+.comp-table { background:#fff;border-radius:8px;border:1px solid #E0E3EA;overflow:hidden; }
+.comp-row { display:grid;grid-template-columns:120px 1fr 1fr 1fr;border-bottom:1px solid #F0F2F8; }
+.comp-row:last-child { border-bottom:none; }
+.comp-cell { padding:8px 10px;font-size:9px;color:#4A5580;display:flex;align-items:center; }
+.comp-cell.header-cell { background:#0A0A0A;color:#fff;font-weight:700;justify-content:center;font-family:'Syne',sans-serif; }
+.comp-cell.label-cell { background:#F4F5F8;font-weight:600;color:#0A0A0A;font-size:8px;text-transform:uppercase;letter-spacing:0.5px; }
+.comp-cell.highlight { color:#0A0A0A;font-weight:700; }
+.comp-cell.best { color:#1E9E6A;font-weight:700; }
+.comp-add-slot { border:2px dashed #CDD2E0;border-radius:8px;height:40px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#9AA0B0;background:transparent; }
+.comp-buy-row { display:grid;grid-template-columns:120px 1fr 1fr 1fr;padding:8px 0; }
+.comp-buy-cell { padding:0 10px;display:flex;align-items:center;justify-content:center; }
+.comp-btn { height:28px;background:#0A0A0A;border-radius:5px;width:100%;font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif; }
+
+/* PRODUCT GRID */
+.products-section { background:#fff;padding:16px 20px; }
+.ps-header { display:flex;align-items:center;gap:10px;margin-bottom:14px; }
+.ps-title { font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#0A0A0A;flex:1; }
+.ps-count { font-size:9px;color:#9AA0B0; }
+.ps-sort { height:28px;background:#F4F5F8;border:1px solid #E0E3EA;border-radius:5px;padding:0 10px;font-size:9px;color:#4A5580;display:flex;align-items:center;gap:6px; }
+.ps-filters-active { display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap; }
+.filter-chip-active { height:22px;background:#0A0A0A;color:#fff;border-radius:11px;padding:0 10px;font-size:8px;display:flex;align-items:center;gap:5px;font-family:'Syne',sans-serif; }
+.filter-chip-active span { opacity:0.5; }
+.ps-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px; }
+.ps-card {
+  border:1px solid #E8EBF2;border-radius:8px;overflow:hidden;
+  background:#fff;
+}
+.ps-card-img { height:70px;background:#F4F5F8;display:flex;align-items:center;justify-content:center;font-size:20px;position:relative; }
+.ps-card-body { padding:8px; }
+.ps-name { height:8px;background:#CDD2E0;border-radius:2px;width:90%;margin-bottom:3px; }
+.ps-name2 { height:8px;background:#E8EBF2;border-radius:2px;width:70%;margin-bottom:5px; }
+.ps-specs-row { display:flex;gap:3px;margin-bottom:5px; }
+.ps-spec { height:13px;background:#F0F2F8;border-radius:2px;padding:0 5px;font-size:7px;color:#2347B0;display:flex;align-items:center; }
+.ps-price { height:11px;background:#0A0A0A;border-radius:2px;width:55%;margin-bottom:3px; }
+.ps-quota { height:11px;background:#FFF8E0;border-radius:2px;width:80%;margin-bottom:5px;border:1px solid #E8C870; }
+.ps-btn-row { display:grid;grid-template-columns:1fr 1fr;gap:4px; }
+.ps-btn-cart { height:20px;background:#0A0A0A;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;font-weight:700;font-family:'Syne',sans-serif; }
+.ps-btn-buy { height:20px;background:var(--yellow);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;color:#000;font-weight:700;font-family:'Syne',sans-serif; }
+.ps-pagination { display:flex;justify-content:center;gap:5px; }
+.pg { width:24px;height:24px;border-radius:4px;background:#F4F5F8;border:1px solid #E0E3EA;display:flex;align-items:center;justify-content:center;font-size:9px;color:#4A5580; }
+.pg.active { background:#0A0A0A;color:#fff;border-color:#0A0A0A; }
+
+/* ACCESSORIES */
+.acc-section { background:#0A0A0A;padding:16px 20px; }
+.acc-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:12px; }
+.acc-title { font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff; }
+.acc-link { font-size:9px;color:rgba(255,255,255,0.4); }
+.acc-grid { display:grid;grid-template-columns:repeat(5,1fr);gap:8px; }
+.acc-card { border:1px solid rgba(255,255,255,0.08);border-radius:8px;overflow:hidden;background:rgba(255,255,255,0.04); }
+.acc-card-img { height:50px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:18px; }
+.acc-card-body { padding:7px; }
+.acc-name { height:7px;background:rgba(255,255,255,0.2);border-radius:2px;width:90%;margin-bottom:3px; }
+.acc-name2 { height:7px;background:rgba(255,255,255,0.1);border-radius:2px;width:70%;margin-bottom:5px; }
+.acc-price { height:9px;background:var(--yellow);border-radius:2px;width:50%; }
+
+/* CHAT BUTTON */
+.chat-float {
+  position:sticky;bottom:16px;right:0;
+  display:flex;justify-content:flex-end;padding:0 20px;
+  pointer-events:none;
+}
+.chat-btn {
+  background:#25D366;border-radius:24px;height:40px;
+  padding:0 14px;display:flex;align-items:center;gap:8px;
+  box-shadow:0 4px 20px rgba(37,211,102,0.4);
+  pointer-events:all;
+}
+.chat-icon { width:22px;height:22px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px; }
+.chat-text { font-size:9px;font-weight:700;color:#fff;font-family:'Syne',sans-serif; }
+.chat-pulse { width:8px;height:8px;border-radius:50%;background:#fff; }
+
+/* LANDING FOOTER */
+.landing-footer {
+  background:#000;border-top:1px solid rgba(255,255,255,0.06);
+  padding:16px 20px;
+}
+.lf-grid { display:grid;grid-template-columns:1fr 1fr 1fr 120px;gap:16px;margin-bottom:12px; }
+.lf-col-line { height:7px;background:rgba(255,255,255,0.15);border-radius:2px;margin-bottom:4px; }
+.lf-col-line.short { width:60%; }
+.lf-logo-row { display:flex;align-items:center;gap:8px; }
+.lf-logo-box { width:28px;height:28px;background:rgba(255,255,255,0.08);border-radius:4px;display:flex;align-items:center;justify-content:center; }
+.lf-logo-box span { font-size:9px;font-weight:900;color:#fff;font-family:'Syne',sans-serif; }
+.lf-brand-name { font-size:10px;font-weight:700;color:#fff;font-family:'Syne',sans-serif; }
+.lf-apps { display:flex;flex-direction:column;gap:5px; }
+.lf-app { height:22px;background:rgba(255,255,255,0.08);border-radius:4px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;padding:0 8px;gap:5px;font-size:8px;color:rgba(255,255,255,0.5); }
+.lf-bottom { display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.06);padding-top:10px; }
+.lf-copy { font-size:8px;color:rgba(255,255,255,0.2); }
+.lf-social { display:flex;gap:6px; }
+.lf-soc { width:20px;height:20px;background:rgba(255,255,255,0.06);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px; }
+
+/* ══ ANNOTATIONS ══ */
+.ann-panel { display:flex;flex-direction:column;gap:14px; }
+
+.ann-group-title {
+  font-family:'Syne',sans-serif;font-size:9px;font-weight:800;
+  color:var(--muted);letter-spacing:3px;text-transform:uppercase;
+  padding-bottom:8px;border-bottom:1px solid var(--border);
+}
+
+.ann { background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:14px;position:relative; }
+.ann.new { border-color:#1E9E6A40;background:#1E9E6A08; }
+.ann.change { border-color:var(--yellow)40;background:#F0A50008; }
+
+.ann-head { display:flex;align-items:flex-start;gap:10px;margin-bottom:8px; }
+.ann-icon {
+  width:24px;height:24px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;flex-shrink:0;
+}
+.ann-icon.y { background:var(--yellow);color:#000; }
+.ann-icon.n { background:#0A0A0A;color:#fff; }
+.ann-icon.g { background:var(--green);color:#fff; }
+.ann-icon.r { background:var(--red);color:#fff; }
+
+.ann-title-text { font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#fff; }
+.ann-subtitle { font-size:9px;color:var(--muted);margin-top:2px; }
+.ann-body { font-size:10px;color:var(--muted);line-height:1.6;margin-bottom:8px; }
+.ann-list { list-style:none; }
+.ann-list li { font-size:10px;color:var(--muted);padding-left:14px;position:relative;margin-bottom:4px;line-height:1.5; }
+.ann-list li::before { content:'→';position:absolute;left:0;color:var(--yellow);font-size:9px; }
+
+.tag { display:inline-block;font-size:8px;font-weight:700;padding:2px 8px;border-radius:3px;font-family:'Syne',sans-serif;margin-right:4px;margin-top:4px;text-transform:uppercase;letter-spacing:0.5px; }
+.tag.y { background:var(--yellow);color:#000; }
+.tag.n { background:#0A0A0A;color:#fff; }
+.tag.g { background:var(--green);color:#fff; }
+.tag.r { background:var(--red);color:#fff; }
+.tag.gray { background:var(--surface2);color:var(--muted); }
+
+.decision-box {
+  background:var(--surface2);border-radius:6px;padding:10px 12px;margin-top:8px;
+  border-left:3px solid var(--yellow);
+}
+.decision-label { font-size:8px;color:var(--yellow);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-family:'Syne',sans-serif; }
+.decision-text { font-size:10px;color:var(--text);line-height:1.5; }
+
+.diff-row { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px; }
+.diff-box { background:var(--surface2);border-radius:6px;padding:8px 10px; }
+.diff-label { font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px; }
+.diff-label.before { color:var(--red); }
+.diff-label.after { color:var(--green); }
+.diff-text { font-size:9px;color:var(--muted);line-height:1.5; }
+
+.flow-box-ann { background:var(--surface2);border-radius:6px;padding:6px 10px;font-size:10px;color:var(--text);text-align:center; }
+.flow-box-ann.hl { background:var(--navy);border:1px solid var(--navy-light);color:#fff; }
+.flow-arr { text-align:center;color:var(--yellow);font-size:12px;padding:2px 0; }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div>
+    <h1>Wireframe v2 · Landing Celulares</h1>
+    <p>Tienda Amiga ER · Identidad propia · Estilo tecnológico · Todos los módulos del gerente</p>
+  </div>
+  <div class="version-badge">v2 — Landing especial</div>
+</div>
+
+<div class="master-grid">
+
+  <!-- ══ SCREEN ══ -->
+  <div class="screen-wrap">
+    <div class="screen-chrome">
+      <div class="chrome-bar">
+        <div class="chrome-dot" style="background:#FF5F56"></div>
+        <div class="chrome-dot" style="background:#FFBD2E"></div>
+        <div class="chrome-dot" style="background:#27C93F"></div>
+        <div class="chrome-url">tiendaamiga.com.bo<strong style="color:#ccd6f6">/celulares</strong></div>
+        <div class="chrome-label">1280px</div>
+      </div>
+
+      <div class="page">
+
+        <!-- ══ [0] HOME ENTRY POINT ══ -->
+        <div class="home-entry-section">
+          <div class="home-entry-label">
+            <strong>HOME ACTUAL</strong>
+            <span>→ Así luce el entry point en la home hacia la landing de Celulares</span>
+          </div>
+          <div style="padding:0 0 0 0;">
+            <div class="sec-marker" style="display:flex;width:100%;"><span>0</span> ENTRY POINT EN HOME — Banner/bloque especial</div>
+          </div>
+          <div class="home-hero-strip">
+            <div class="existing-hero">
+              <div class="eh-text">
+                <div class="eh-line" style="width:100px;"></div>
+                <div class="eh-line2"></div>
+              </div>
+              <div class="eh-img">HERO<br>ACTUAL</div>
+            </div>
+            <div class="cell-entry-banner">
+              <div class="cell-badge-new">🆕 NUEVO</div>
+              <div class="cell-entry-img">📱</div>
+              <div class="cell-entry-text">
+                <div class="cell-entry-eyebrow"></div>
+                <div class="cell-entry-title"></div>
+                <div class="cell-entry-sub"></div>
+              </div>
+              <div class="cell-entry-cta">EXPLORAR →</div>
+            </div>
+          </div>
+          <div style="background:#FFF8E0;border-bottom:2px dashed #E8C870;padding:5px 16px;font-size:9px;color:#8A6200;display:flex;gap:6px;align-items:center;">
+            <span>↑</span> Bloque en la home que lleva a <strong>/celulares</strong> — diseño oscuro para diferenciarse visualmente del resto de la home
+          </div>
+        </div>
+
+        <!-- ══ LANDING CELULARES ══ -->
+        <div class="landing-page">
+
+          <!-- NAV PROPIO -->
+          <div class="sec-marker"><span>1</span> NAV SIMPLIFICADO — Identidad propia de la landing</div>
+          <div class="landing-nav">
+            <div class="nav-logo">
+              <div class="nav-logo-mark"><span>TA</span></div>
+              <div>
+                <div class="nav-logo-text">Tienda Amiga</div>
+                <div class="nav-logo-sub" style="display:block;font-size:7px;color:rgba(255,255,255,0.3);font-family:'DM Mono',monospace;">CELULARES</div>
+              </div>
+            </div>
+            <div class="nav-pills">
+              <div class="nav-pill-item active">Todos</div>
+              <div class="nav-pill-item">Samsung</div>
+              <div class="nav-pill-item">Apple</div>
+              <div class="nav-pill-item">Xiaomi</div>
+              <div class="nav-pill-item">Ofertas</div>
+              <div class="nav-pill-item">Accesorios</div>
+            </div>
+            <div class="nav-right">
+              <div class="nav-search"><span>🔍 Buscar modelo...</span></div>
+              <div style="font-size:9px;color:rgba(255,255,255,0.4);">📍 SCZ</div>
+              <div class="nav-cart">2</div>
+            </div>
+          </div>
+
+          <!-- HERO -->
+          <div class="sec-marker"><span>2</span> HERO — Rotativo · 3 slides · Estilo inmersivo</div>
+          <div class="landing-hero">
+            <div class="lh-bg-gradient"></div>
+            <div class="lh-left">
+              <div class="lh-eyebrow">
+                <div class="lh-eyebrow-dot"></div>
+                <span>LANZAMIENTO 2025</span>
+              </div>
+              <div>
+                <div class="lh-title-1"></div>
+                <div style="height:8px;"></div>
+                <div class="lh-title-2"></div>
+              </div>
+              <div>
+                <div class="lh-sub"></div>
+                <div style="height:4px;"></div>
+                <div class="lh-sub2"></div>
+              </div>
+              <div class="lh-ctas">
+                <div class="lh-btn-primary">COMPRAR AHORA</div>
+                <div class="lh-btn-secondary">VER SPECS</div>
+              </div>
+              <div class="lh-stats">
+                <div class="lh-stat"><div class="lh-stat-val">12x</div><div class="lh-stat-label">Cuotas</div></div>
+                <div class="lh-stat"><div class="lh-stat-val">0%</div><div class="lh-stat-label">Interés</div></div>
+                <div class="lh-stat"><div class="lh-stat-val">2d</div><div class="lh-stat-label">Entrega SCZ</div></div>
+              </div>
+            </div>
+            <div class="lh-right">
+              <div class="hero-glow"></div>
+              <div class="hero-phone-mock">📱<br><br><span style="font-size:7px;display:block;margin-top:4px;">Imagen<br>producto</span></div>
+            </div>
+            <div class="lh-dots">
+              <div class="lh-dot active"></div>
+              <div class="lh-dot"></div>
+              <div class="lh-dot"></div>
+            </div>
+          </div>
+
+          <!-- BENEFIT BAR -->
+          <div class="sec-marker"><span>3</span> STRIP DE BENEFICIOS</div>
+          <div class="benefit-bar">
+            <div class="benefit-item"><div class="benefit-dot"></div>Envío gratis +Bs.150</div>
+            <div class="benefit-item"><div class="benefit-dot"></div>Cuotas sin interés</div>
+            <div class="benefit-item"><div class="benefit-dot"></div>Garantía oficial</div>
+            <div class="benefit-item"><div class="benefit-dot"></div>1–2 días Santa Cruz</div>
+          </div>
+
+          <!-- BRAND SELECTOR -->
+          <div class="sec-marker"><span>4</span> SELECTOR DE MARCAS — Cards clicables</div>
+          <div class="brand-selector">
+            <div class="bs-header">
+              <div class="bs-title">Elige tu marca</div>
+              <div class="bs-link">Ver todas →</div>
+            </div>
+            <div class="bs-grid">
+              <div class="brand-card active">
+                <div class="brand-logo-box"><span>SAM</span></div>
+                <div class="brand-name" style="color:#fff;">Samsung</div>
+                <div class="brand-count" style="color:rgba(255,255,255,0.3);">48 modelos</div>
+              </div>
+              <div class="brand-card">
+                <div class="brand-logo-box"><span>🍎</span></div>
+                <div class="brand-name">Apple</div>
+                <div class="brand-count">24 modelos</div>
+              </div>
+              <div class="brand-card">
+                <div class="brand-logo-box"><span>XI</span></div>
+                <div class="brand-name">Xiaomi</div>
+                <div class="brand-count">36 modelos</div>
+              </div>
+              <div class="brand-card">
+                <div class="brand-logo-box"><span>MOT</span></div>
+                <div class="brand-name">Motorola</div>
+                <div class="brand-count">22 modelos</div>
+              </div>
+              <div class="brand-card">
+                <div class="brand-logo-box"><span>HW</span></div>
+                <div class="brand-name">Huawei</div>
+                <div class="brand-count">18 modelos</div>
+              </div>
+              <div class="brand-card">
+                <div class="brand-logo-box"><span>OP</span></div>
+                <div class="brand-name">Oppo</div>
+                <div class="brand-count">12 modelos</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROMO BANNERS -->
+          <div class="sec-marker"><span>5</span> BANNERS DE PROMOCIÓN POR MARCA</div>
+          <div class="promo-banners">
+            <div class="pb-row">
+              <div class="promo-banner-card dark">
+                <div class="pb-img">📱</div>
+                <div class="pb-text">
+                  <div class="pb-line1"></div>
+                  <div class="pb-line2"></div>
+                </div>
+                <div class="pb-cta">VER OFERTA</div>
+              </div>
+              <div class="promo-banner-card blue">
+                <div class="pb-img">📱</div>
+                <div class="pb-text">
+                  <div class="pb-line1"></div>
+                  <div class="pb-line2"></div>
+                </div>
+                <div class="pb-cta">COMPRAR</div>
+              </div>
+              <div class="promo-banner-card yellow">
+                <div class="pb-img">💳</div>
+                <div class="pb-text">
+                  <div class="pb-line1"></div>
+                  <div class="pb-line2"></div>
+                </div>
+                <div class="pb-cta">VER CUOTAS</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CREDIT MODULE -->
+          <div class="sec-marker"><span>6</span> MÓDULO CRÉDITO PREAPROBADO — CI + estado instantáneo</div>
+          <div class="credit-module">
+            <div class="cm-left">
+              <div class="cm-tag">💳 CUOTITAS TIENDA AMIGA</div>
+              <div class="cm-title"></div>
+              <div class="cm-sub"></div>
+              <div class="cm-sub2"></div>
+            </div>
+            <div class="cm-right">
+              <div class="cm-input">Ingresa tu CI...</div>
+              <div class="cm-btn">VERIFICAR CRÉDITO →</div>
+            </div>
+          </div>
+
+          <!-- FEATURED PHONES -->
+          <div class="sec-marker"><span>7</span> DESTACADOS — Más vendidos · Cards premium con 2 CTAs</div>
+          <div class="featured-section">
+            <div class="fs-header">
+              <div class="fs-title">Más vendidos</div>
+              <div class="fs-tabs">
+                <div class="fs-tab active">Todo</div>
+                <div class="fs-tab">Premium</div>
+                <div class="fs-tab">Gama media</div>
+                <div class="fs-tab">Económico</div>
+              </div>
+            </div>
+            <div class="fs-grid">
+              <!-- Card 1 -->
+              <div class="phone-card">
+                <div class="phone-card-img">
+                  <div class="pc-badge-sale">-20%</div>
+                  <div class="pc-compare active">✓</div>
+                  <span>📱</span>
+                </div>
+                <div class="pc-body">
+                  <div class="pc-brand"></div>
+                  <div class="pc-name"></div>
+                  <div class="pc-name2"></div>
+                  <div class="pc-specs">
+                    <div class="pc-spec">8GB RAM</div>
+                    <div class="pc-spec">256GB</div>
+                    <div class="pc-spec">5G</div>
+                  </div>
+                  <div class="pc-price-row">
+                    <div style="display:flex;flex-direction:column;">
+                      <span class="pc-price">Bs. 3.490</span>
+                      <div class="pc-price-old"></div>
+                    </div>
+                  </div>
+                  <div class="pc-quota"><div class="quota-dot"></div>12x Bs. 291/mes · Sin interés</div>
+                  <div class="pc-btns">
+                    <div class="pc-btn-add">+ CARRITO</div>
+                    <div class="pc-btn-buy">COMPRAR YA</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Card 2 -->
+              <div class="phone-card">
+                <div class="phone-card-img">
+                  <div class="pc-badge-new">NUEVO</div>
+                  <div class="pc-compare">+</div>
+                  <span>📱</span>
+                </div>
+                <div class="pc-body">
+                  <div class="pc-brand"></div>
+                  <div class="pc-name"></div>
+                  <div class="pc-name2"></div>
+                  <div class="pc-specs">
+                    <div class="pc-spec">12GB RAM</div>
+                    <div class="pc-spec">512GB</div>
+                    <div class="pc-spec">5G</div>
+                  </div>
+                  <div class="pc-price-row"><span class="pc-price">Bs. 6.990</span></div>
+                  <div class="pc-quota"><div class="quota-dot"></div>12x Bs. 583/mes · Sin interés</div>
+                  <div class="pc-btns">
+                    <div class="pc-btn-add">+ CARRITO</div>
+                    <div class="pc-btn-buy">COMPRAR YA</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Card 3 -->
+              <div class="phone-card">
+                <div class="phone-card-img">
+                  <div class="pc-compare">+</div>
+                  <span>📱</span>
+                </div>
+                <div class="pc-body">
+                  <div class="pc-brand"></div>
+                  <div class="pc-name"></div>
+                  <div class="pc-name2"></div>
+                  <div class="pc-specs">
+                    <div class="pc-spec">6GB RAM</div>
+                    <div class="pc-spec">128GB</div>
+                    <div class="pc-spec">4G</div>
+                  </div>
+                  <div class="pc-price-row"><span class="pc-price">Bs. 1.890</span></div>
+                  <div class="pc-quota"><div class="quota-dot"></div>6x Bs. 315/mes · Sin interés</div>
+                  <div class="pc-btns">
+                    <div class="pc-btn-add">+ CARRITO</div>
+                    <div class="pc-btn-buy">COMPRAR YA</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- COMPARATOR -->
+          <div class="sec-marker"><span>8</span> COMPARADOR — Panel activo al seleccionar 2+ modelos</div>
+          <div class="comparator-section">
+            <div class="comp-header">
+              <div class="comp-title">Comparar modelos seleccionados</div>
+              <div class="comp-close">✕ Limpiar comparación</div>
+            </div>
+            <div class="comp-table">
+              <div class="comp-row">
+                <div class="comp-cell label-cell">Modelo</div>
+                <div class="comp-cell header-cell">Samsung Galaxy A55</div>
+                <div class="comp-cell header-cell">Xiaomi 14T</div>
+                <div class="comp-cell" style="border:2px dashed #CDD2E0;justify-content:center;font-size:9px;color:#9AA0B0;">+ Agregar</div>
+              </div>
+              <div class="comp-row">
+                <div class="comp-cell label-cell">Precio</div>
+                <div class="comp-cell highlight">Bs. 3.490</div>
+                <div class="comp-cell best">Bs. 2.990 ✓</div>
+                <div class="comp-cell"></div>
+              </div>
+              <div class="comp-row">
+                <div class="comp-cell label-cell">RAM</div>
+                <div class="comp-cell">8 GB</div>
+                <div class="comp-cell best">12 GB ✓</div>
+                <div class="comp-cell"></div>
+              </div>
+              <div class="comp-row">
+                <div class="comp-cell label-cell">Almacen.</div>
+                <div class="comp-cell best">256 GB ✓</div>
+                <div class="comp-cell">128 GB</div>
+                <div class="comp-cell"></div>
+              </div>
+              <div class="comp-row">
+                <div class="comp-cell label-cell">Red</div>
+                <div class="comp-cell">5G</div>
+                <div class="comp-cell">5G</div>
+                <div class="comp-cell"></div>
+              </div>
+              <div class="comp-row">
+                <div class="comp-cell label-cell">Cuota</div>
+                <div class="comp-cell">12x Bs.291</div>
+                <div class="comp-cell best">12x Bs.249 ✓</div>
+                <div class="comp-cell"></div>
+              </div>
+            </div>
+            <div class="comp-buy-row">
+              <div class="comp-buy-cell"></div>
+              <div class="comp-buy-cell"><div class="comp-btn">COMPRAR</div></div>
+              <div class="comp-buy-cell"><div class="comp-btn">COMPRAR</div></div>
+              <div class="comp-buy-cell"></div>
+            </div>
+          </div>
+
+          <!-- PRODUCT GRID -->
+          <div class="sec-marker"><span>9</span> GRILLA COMPLETA — 4 cols · Filtros activos · 2 CTAs por card</div>
+          <div class="products-section">
+            <div class="ps-header">
+              <div class="ps-title">Todos los celulares</div>
+              <div class="ps-count">124 resultados</div>
+              <div class="ps-sort">Más vendidos ▾</div>
+            </div>
+            <div class="ps-filters-active">
+              <div class="filter-chip-active">Samsung <span>✕</span></div>
+              <div class="filter-chip-active">5G <span>✕</span></div>
+              <div class="filter-chip-active">Bs.1.000 – 5.000 <span>✕</span></div>
+            </div>
+            <div class="ps-grid">
+              <div class="ps-card"><div class="ps-card-img" style="background:#F4F5F8;"><div class="pc-badge-sale" style="font-size:7px;top:5px;left:5px;">-15%</div><span>📱</span></div><div class="ps-card-body"><div class="ps-name"></div><div class="ps-name2"></div><div class="ps-specs-row"><div class="ps-spec">6GB</div><div class="ps-spec">4G</div></div><div class="ps-price"></div><div class="ps-quota"></div><div class="ps-btn-row"><div class="ps-btn-cart">+ CARRITO</div><div class="ps-btn-buy">COMPRAR</div></div></div></div>
+              <div class="ps-card"><div class="ps-card-img"><span>📱</span></div><div class="ps-card-body"><div class="ps-name"></div><div class="ps-name2"></div><div class="ps-specs-row"><div class="ps-spec">8GB</div><div class="ps-spec">5G</div></div><div class="ps-price"></div><div class="ps-quota"></div><div class="ps-btn-row"><div class="ps-btn-cart">+ CARRITO</div><div class="ps-btn-buy">COMPRAR</div></div></div></div>
+              <div class="ps-card"><div class="ps-card-img"><div class="pc-badge-new" style="font-size:7px;top:5px;left:5px;">NUEVO</div><span>📱</span></div><div class="ps-card-body"><div class="ps-name"></div><div class="ps-name2"></div><div class="ps-specs-row"><div class="ps-spec">12GB</div><div class="ps-spec">5G</div></div><div class="ps-price"></div><div class="ps-quota"></div><div class="ps-btn-row"><div class="ps-btn-cart">+ CARRITO</div><div class="ps-btn-buy">COMPRAR</div></div></div></div>
+              <div class="ps-card"><div class="ps-card-img"><span>📱</span></div><div class="ps-card-body"><div class="ps-name"></div><div class="ps-name2"></div><div class="ps-specs-row"><div class="ps-spec">4GB</div><div class="ps-spec">4G</div></div><div class="ps-price"></div><div class="ps-quota"></div><div class="ps-btn-row"><div class="ps-btn-cart">+ CARRITO</div><div class="ps-btn-buy">COMPRAR</div></div></div></div>
+              <div class="ps-card"><div class="ps-card-img"><span>📱</span></div><div class="ps-card-body"><div class="ps-name"></div><div class="ps-name2"></div><div class="ps-specs-row"><div class="ps-spec">8GB</div><div class="ps-spec">5G</div></div><div class="ps-price"></div><div class="ps-quota"></div><div class="ps-btn-row"><div class="ps-btn-cart">+ CARRITO</div><div class="ps-btn-buy">COMPRAR</div></div></div></div>
+              <div class="ps-card"><div class="ps-card-img"><div class="pc-badge-sale" style="font-size:7px;top:5px;left:5px;">-25%</div><span>📱</span></div><div class="ps-card-body"><div class="ps-name"></div><div class="ps-name2"></div><div class="ps-specs-row"><div class="ps-spec">6GB</div><div class="ps-spec">4G</div></div><div class="ps-price"></div><div class="ps-quota"></div><div class="ps-btn-row"><div class="ps-btn-cart">+ CARRITO</div><div class="ps-btn-buy">COMPRAR</div></div></div></div>
+              <div class="ps-card"><div class="ps-card-img"><span>📱</span></div><div class="ps-card-body"><div class="ps-name"></div><div class="ps-name2"></div><div class="ps-specs-row"><div class="ps-spec">16GB</div><div class="ps-spec">5G</div></div><div class="ps-price"></div><div class="ps-quota"></div><div class="ps-btn-row"><div class="ps-btn-cart">+ CARRITO</div><div class="ps-btn-buy">COMPRAR</div></div></div></div>
+              <div class="ps-card"><div class="ps-card-img"><span>📱</span></div><div class="ps-card-body"><div class="ps-name"></div><div class="ps-name2"></div><div class="ps-specs-row"><div class="ps-spec">8GB</div><div class="ps-spec">5G</div></div><div class="ps-price"></div><div class="ps-quota"></div><div class="ps-btn-row"><div class="ps-btn-cart">+ CARRITO</div><div class="ps-btn-buy">COMPRAR</div></div></div></div>
+            </div>
+            <div class="ps-pagination">
+              <div class="pg">‹</div><div class="pg active">1</div><div class="pg">2</div><div class="pg">3</div><div class="pg">…</div><div class="pg">12</div><div class="pg">›</div>
+            </div>
+          </div>
+
+          <!-- ACCESSORIES -->
+          <div class="sec-marker"><span>10</span> ACCESORIOS — Sección oscura · Identidad inmersiva</div>
+          <div class="acc-section">
+            <div class="acc-header">
+              <div class="acc-title">Accesorios para tu celular</div>
+              <div class="acc-link">Ver todos →</div>
+            </div>
+            <div class="acc-grid">
+              <div class="acc-card"><div class="acc-card-img">🔌</div><div class="acc-card-body"><div class="acc-name"></div><div class="acc-name2"></div><div class="acc-price"></div></div></div>
+              <div class="acc-card"><div class="acc-card-img">🎧</div><div class="acc-card-body"><div class="acc-name"></div><div class="acc-name2"></div><div class="acc-price"></div></div></div>
+              <div class="acc-card"><div class="acc-card-img">📱</div><div class="acc-card-body"><div class="acc-name"></div><div class="acc-name2"></div><div class="acc-price"></div></div></div>
+              <div class="acc-card"><div class="acc-card-img">🔋</div><div class="acc-card-body"><div class="acc-name"></div><div class="acc-name2"></div><div class="acc-price"></div></div></div>
+              <div class="acc-card"><div class="acc-card-img">📡</div><div class="acc-card-body"><div class="acc-name"></div><div class="acc-name2"></div><div class="acc-price"></div></div></div>
+            </div>
+          </div>
+
+          <!-- CHAT FLOAT -->
+          <div class="sec-marker"><span>11</span> CHAT FLOTANTE — Siempre visible</div>
+          <div class="chat-float">
+            <div class="chat-btn">
+              <div class="chat-icon">💬</div>
+              <div class="chat-text">¿Te ayudamos a elegir?</div>
+              <div class="chat-pulse"></div>
+            </div>
+          </div>
+
+          <!-- FOOTER -->
+          <div class="sec-marker"><span>12</span> FOOTER — Oscuro · Coherente con identidad de la landing</div>
+          <div class="landing-footer">
+            <div class="lf-grid">
+              <div>
+                <div class="lf-logo-row" style="margin-bottom:8px;">
+                  <div class="lf-logo-box"><span>TA</span></div>
+                  <div>
+                    <div class="lf-brand-name">Tienda Amiga</div>
+                    <div style="font-size:7px;color:rgba(255,255,255,0.3);margin-top:1px;">Celulares</div>
+                  </div>
+                </div>
+                <div class="lf-col-line" style="width:80px;"></div>
+                <div class="lf-col-line short"></div>
+              </div>
+              <div>
+                <div class="lf-col-line" style="width:60px;margin-bottom:6px;"></div>
+                <div class="lf-col-line short"></div>
+                <div class="lf-col-line short"></div>
+                <div class="lf-col-line short"></div>
+              </div>
+              <div>
+                <div class="lf-col-line" style="width:60px;margin-bottom:6px;"></div>
+                <div class="lf-col-line short"></div>
+                <div class="lf-col-line short"></div>
+              </div>
+              <div class="lf-apps">
+                <div class="lf-app">🍎 App Store</div>
+                <div class="lf-app">▶ Google Play</div>
+              </div>
+            </div>
+            <div class="lf-bottom">
+              <div class="lf-copy">© 2025 Tienda Amiga ER · Todos los derechos reservados</div>
+              <div class="lf-social">
+                <div class="lf-soc">f</div>
+                <div class="lf-soc">in</div>
+                <div class="lf-soc">ig</div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /landing-page -->
+      </div><!-- /page -->
+    </div><!-- /screen-chrome -->
+  </div><!-- /screen-wrap -->
+
+  <!-- ══ ANNOTATIONS ══ -->
+  <div class="ann-panel">
+
+    <div class="ann-group-title">Decisiones de diseño</div>
+
+    <div class="ann change">
+      <div class="ann-head">
+        <div class="ann-icon y">0</div>
+        <div><div class="ann-title-text">Entry point en la home</div><div class="ann-subtitle">Del gerente: "accesible desde home mediante banner llamativo"</div></div>
+      </div>
+      <div class="ann-body">Banner de fondo oscuro/negro en la home que contrasta con el resto del catálogo y lleva a <strong>/celulares</strong>. La diferencia visual actúa como imán.</div>
+      <div class="decision-box">
+        <div class="decision-label">Decisión</div>
+        <div class="decision-text">Banner de ancho completo en la home, fondo oscuro (#000 o gradiente), imagen de celular premium, CTA "EXPLORAR →". Se ubica en la segunda posición del hero o como bloque fijo debajo.</div>
+      </div>
+    </div>
+
+    <div class="ann new">
+      <div class="ann-head">
+        <div class="ann-icon n">1</div>
+        <div><div class="ann-title-text">Nav propio · URL /celulares</div><div class="ann-subtitle">Identidad separada del sitio principal</div></div>
+      </div>
+      <div class="ann-body">El header de la landing reemplaza el mega-menú general por una nav simplificada con links a marcas y secciones clave.</div>
+      <ul class="ann-list">
+        <li>Logo Tienda Amiga + sublabel "CELULARES" en gris claro</li>
+        <li>Nav pills: Todos · Samsung · Apple · Xiaomi · Ofertas · Accesorios</li>
+        <li>Buscador específico de celulares (por modelo, specs)</li>
+        <li>Ícono de carrito global con badge de cantidad</li>
+      </ul>
+      <span class="tag n">Nuevo módulo</span>
+    </div>
+
+    <div class="ann new">
+      <div class="ann-head">
+        <div class="ann-icon n">2</div>
+        <div><div class="ann-title-text">Hero inmersivo · Estilo Apple</div><div class="ann-subtitle">Fondo negro · Tipografía grande · Datos de cuota en el hero</div></div>
+      </div>
+      <div class="ann-body">A diferencia del v1, el hero de la landing usa fondo 100% negro con gradiente de luz, texto bold en blanco, y los datos clave (cuotas, interés, entrega) como stats pequeños en la parte inferior izquierda.</div>
+      <div class="diff-row">
+        <div class="diff-box"><div class="diff-label before">Antes (v1)</div><div class="diff-text">Hero azul marino sobre fondo blanco, estilo tienda genérica</div></div>
+        <div class="diff-box"><div class="diff-label after">Ahora (v2)</div><div class="diff-text">Hero negro inmersivo, efecto luminoso, stats de cuota integrados</div></div>
+      </div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-head">
+        <div class="ann-icon y">4</div>
+        <div><div class="ann-title-text">Brand selector · Cards clicables</div><div class="ann-subtitle">Del gerente: "botones de las diferentes marcas"</div></div>
+      </div>
+      <div class="ann-body">Cards de marca con logo, nombre y cantidad de modelos. Al hacer click activa filtro y filtra toda la página sin recargar.</div>
+      <ul class="ann-list">
+        <li>Card activa: fondo negro, texto blanco</li>
+        <li>6 marcas visibles + "Ver todas" expandible</li>
+        <li>Cantidad de modelos por marca para orientar al usuario</li>
+      </ul>
+      <span class="tag y">Punto 3 del gerente</span>
+    </div>
+
+    <div class="ann">
+      <div class="ann-head">
+        <div class="ann-icon y">5</div>
+        <div><div class="ann-title-text">Banners promocionales por marca</div><div class="ann-subtitle">Del gerente: "banners con promociones debajo de los botones de marcas"</div></div>
+      </div>
+      <div class="ann-body">3 banners en grilla (1/3 cada uno) con diferentes offers: oferta de modelo específico, plan de cuotas, promo de operadora. Diseño oscuro/azul/amarillo para variedad visual.</div>
+      <span class="tag y">Punto 4 del gerente</span>
+    </div>
+
+    <div class="ann new">
+      <div class="ann-head">
+        <div class="ann-icon g">6</div>
+        <div><div class="ann-title-text">Módulo crédito preaprobado</div><div class="ann-subtitle">Del gerente: "registrarse con CI y recibir notificación de crédito"</div></div>
+      </div>
+      <div class="ann-body">Franja amarilla con campo de CI. El usuario ingresa su número y obtiene respuesta instantánea sobre su crédito disponible. Requiere integración con sistema de cuotas.</div>
+      <ul class="ann-list">
+        <li>Estado 1: Campo de CI + botón "Verificar"</li>
+        <li>Estado 2: "✓ Tenés Bs. X.XXX aprobados — Comprar en 1 toque"</li>
+        <li>Estado 3: "Sin crédito activo — Solicitar cuotas"</li>
+      </ul>
+      <span class="tag g">Punto 11 del gerente</span>
+      <span class="tag">Requiere backend</span>
+    </div>
+
+    <div class="ann new">
+      <div class="ann-head">
+        <div class="ann-icon n">7</div>
+        <div><div class="ann-title-text">Cards con 2 CTAs · Compra rápida</div><div class="ann-subtitle">Del gerente: "comprar de inmediato sin revisar todos los detalles"</div></div>
+      </div>
+      <div class="ann-body">Cada card tiene dos botones: "+ CARRITO" (negro) y "COMPRAR YA" (amarillo). El segundo lleva directo al checkout con el producto precargado.</div>
+      <div class="decision-box">
+        <div class="decision-label">Flujo "Comprar Ya"</div>
+        <div class="decision-text">Card → Click "COMPRAR YA" → Modal de confirmación (cantidad + dirección guardada) → Checkout → Pago. 3 pasos máximo.</div>
+      </div>
+      <span class="tag y">Punto 8 del gerente</span>
+    </div>
+
+    <div class="ann new">
+      <div class="ann-head">
+        <div class="ann-icon n">8</div>
+        <div><div class="ann-title-text">Panel comparador</div><div class="ann-subtitle">Del gerente: "botón de comparación con opciones similares"</div></div>
+      </div>
+      <div class="ann-body">Al hacer click en "+" en la esquina de una card, el modelo se agrega al comparador. El panel aparece debajo de la sección de destacados cuando hay 2+ modelos seleccionados.</div>
+      <ul class="ann-list">
+        <li>Máximo 3 modelos comparables simultáneamente</li>
+        <li>Filas: Precio · RAM · Almacenamiento · Red · Cuota</li>
+        <li>Mejor valor marcado en verde con checkmark</li>
+        <li>CTA "COMPRAR" debajo de cada columna</li>
+        <li>Slot vacío "+" para agregar tercer modelo</li>
+      </ul>
+      <span class="tag y">Punto 7 del gerente</span>
+    </div>
+
+    <div class="ann new">
+      <div class="ann-head">
+        <div class="ann-icon g">11</div>
+        <div><div class="ann-title-text">Chat flotante de asesoría</div><div class="ann-subtitle">Del gerente: "botón de asesoría siempre visible"</div></div>
+      </div>
+      <div class="ann-body">Botón sticky verde (WhatsApp / chat interno) siempre visible en la esquina inferior derecha. Texto "¿Te ayudamos a elegir?" para invitar la interacción.</div>
+      <ul class="ann-list">
+        <li>Color verde WhatsApp para asociación inmediata</li>
+        <li>Texto específico para Celulares, no el chat genérico del sitio</li>
+        <li>Pulso animado para llamar la atención sin ser invasivo</li>
+      </ul>
+      <span class="tag g">Punto 9 del gerente</span>
+    </div>
+
+    <!-- FLOW -->
+    <div style="margin-top:4px;">
+      <div class="ann-group-title">Flujo de compra rápida</div>
+      <div class="flow-box-ann">Home → Banner Celulares</div>
+      <div class="flow-arr">↓</div>
+      <div class="flow-box-ann hl">Landing /celulares · Hero inmersivo</div>
+      <div class="flow-arr">↓</div>
+      <div class="flow-box-ann">Verifica CI → crédito preaprobado</div>
+      <div class="flow-arr">↓</div>
+      <div class="flow-box-ann">Filtra por marca · Ve promos</div>
+      <div class="flow-arr">↓</div>
+      <div class="flow-box-ann hl">Click "COMPRAR YA" en card</div>
+      <div class="flow-arr">↓</div>
+      <div class="flow-box-ann">Modal confirmación (30 seg)</div>
+      <div class="flow-arr">↓</div>
+      <div class="flow-box-ann hl">Checkout → QR / Pasarela / Cuota</div>
+    </div>
+
+  </div><!-- /ann-panel -->
+</div><!-- /master-grid -->
+
+</body>
+</html>

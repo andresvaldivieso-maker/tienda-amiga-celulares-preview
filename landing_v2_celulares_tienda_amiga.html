@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Celulares · Tienda Amiga</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET & TOKENS ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:    #0F1B3D;
+  --blue:    #1E3A8A;
+  --yellow:  #F5B800;
+  --ylite:   #FFF8DC;
+  --white:   #FFFFFF;
+  --g50:     #F8F9FC;
+  --g100:    #F0F2F7;
+  --g200:    #E1E5EF;
+  --g400:    #9BA3BE;
+  --g600:    #5C6480;
+  --g900:    #111827;
+  --green:   #0D9A5E;
+  --red:     #E53935;
+  --r:       14px;
+  --rlg:     18px;
+  --sh:      0 2px 12px rgba(15,27,61,.08);
+  --shlg:    0 8px 40px rgba(15,27,61,.16);
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Outfit', sans-serif; background: var(--white); color: var(--g900); overflow-x: hidden; }
+button, select { font-family: 'Outfit', sans-serif; }
+a { text-decoration: none; }
+
+/* ─── ENTRY POINT BANNER (from home) ──────────────── */
+.entry-banner {
+  background: var(--navy);
+  padding: 8px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.entry-banner-label { font-size: 11px; color: var(--g400); letter-spacing: 1.5px; text-transform: uppercase; }
+.entry-pill {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(245,184,0,.35);
+  border-radius: 100px; padding: 7px 18px 7px 8px;
+  cursor: pointer; transition: all .25s;
+}
+.entry-pill:hover { border-color: var(--yellow); background: rgba(245,184,0,.08); transform: translateY(-1px); }
+.entry-pill-icon { width: 30px; height: 30px; border-radius: 50%; background: var(--yellow); display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.entry-pill-text { display: flex; flex-direction: column; }
+.entry-pill-text small { font-size: 10px; color: var(--g400); }
+.entry-pill-text strong { font-size: 13px; color: var(--white); font-weight: 700; }
+
+/* ─── HEADER ───────────────────────────────────────── */
+.site-header {
+  background: var(--navy);
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 20px rgba(0,0,0,.25);
+}
+.header-row1 {
+  display: flex; align-items: center; gap: 14px;
+  padding: 0 48px; height: 60px;
+}
+.back-link { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--g400); transition: color .2s; flex-shrink: 0; }
+.back-link:hover { color: var(--white); }
+.divider-v { width: 1px; height: 18px; background: rgba(255,255,255,.15); flex-shrink: 0; }
+.logo { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+.logo-badge { background: var(--yellow); color: var(--navy); font-size: 12px; font-weight: 900; padding: 3px 9px; border-radius: 5px; }
+.logo-name { font-size: 14px; font-weight: 700; color: var(--white); opacity: .9; }
+.search-wrap { flex: 1; max-width: 460px; margin: 0 auto; position: relative; }
+.search-wrap input {
+  width: 100%; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.13);
+  border-radius: 100px; padding: 9px 18px 9px 40px;
+  font-size: 13px; color: var(--white); outline: none; transition: all .2s;
+}
+.search-wrap input::placeholder { color: rgba(255,255,255,.32); }
+.search-wrap input:focus { background: rgba(255,255,255,.14); border-color: rgba(245,184,0,.5); }
+.search-ico { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; }
+.header-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.hbtn {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.11);
+  border-radius: 100px; padding: 7px 14px;
+  font-size: 12px; color: rgba(255,255,255,.75); cursor: pointer; transition: all .2s;
+}
+.hbtn:hover { background: rgba(255,255,255,.13); color: var(--white); }
+.hbtn.cart { background: var(--yellow); border-color: var(--yellow); color: var(--navy); font-weight: 700; }
+.hbtn.cart:hover { background: #ffc820; }
+.cart-dot { background: var(--navy); color: var(--yellow); width: 17px; height: 17px; border-radius: 50%; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+
+/* brand nav bar */
+.brand-nav-bar {
+  display: flex; align-items: center; gap: 2px;
+  padding: 0 48px; height: 42px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  overflow-x: auto; scrollbar-width: none;
+}
+.brand-nav-bar::-webkit-scrollbar { display: none; }
+.bnav-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 13px; border-radius: 100px;
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,.5);
+  cursor: pointer; transition: all .2s; white-space: nowrap; flex-shrink: 0;
+  border: 1px solid transparent; background: none;
+}
+.bnav-chip:hover { color: var(--white); background: rgba(255,255,255,.07); }
+.bnav-chip.active { background: var(--yellow); color: var(--navy); font-weight: 700; border-color: var(--yellow); }
+
+/* ─── A · HERO ─────────────────────────────────────── */
+.hero {
+  background: var(--navy);
+  display: grid; grid-template-columns: 1fr 420px;
+  min-height: 480px; overflow: hidden; position: relative;
+}
+.hero::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 64px;
+  background: linear-gradient(to bottom, transparent, var(--white)); z-index: 2; pointer-events: none;
+}
+.hero-radial {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 55% 75% at 75% 50%, rgba(30,58,138,.55), transparent);
+  pointer-events: none;
+}
+.hero-left {
+  padding: 60px 48px 80px;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; z-index: 1;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(245,184,0,.12); border: 1px solid rgba(245,184,0,.3);
+  border-radius: 100px; padding: 5px 13px; width: fit-content; margin-bottom: 22px;
+  font-size: 11px; font-weight: 600; color: var(--yellow); letter-spacing: .5px; text-transform: uppercase;
+}
+.hero-eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: var(--yellow); animation: blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+.hero-h1 { font-size: clamp(38px,4.5vw,62px); font-weight: 900; line-height: 1.02; color: var(--white); letter-spacing: -2px; margin-bottom: 18px; }
+.hero-h1 em { font-style: normal; color: var(--yellow); }
+.hero-sub { font-family: 'DM Sans', sans-serif; font-size: 16px; color: rgba(255,255,255,.52); line-height: 1.65; max-width: 400px; margin-bottom: 32px; }
+.hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--yellow); color: var(--navy); border: none;
+  font-size: 14px; font-weight: 700; padding: 13px 26px; border-radius: 100px;
+  cursor: pointer; transition: all .25s;
+}
+.btn-primary:hover { background: #ffc820; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,184,0,.4); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); color: var(--white);
+  font-size: 14px; font-weight: 500; padding: 13px 26px; border-radius: 100px;
+  cursor: pointer; transition: all .25s;
+}
+.btn-ghost:hover { background: rgba(255,255,255,.14); transform: translateY(-2px); }
+.credit-chip {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: rgba(13,154,94,.12); border: 1px solid rgba(13,154,94,.3);
+  border-radius: 100px; padding: 7px 14px; cursor: pointer; transition: all .2s; width: fit-content;
+}
+.credit-chip:hover { background: rgba(13,154,94,.2); }
+.credit-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.credit-chip-text { font-size: 12px; color: rgba(255,255,255,.7); }
+.credit-chip-text strong { color: var(--green); }
+
+.hero-right {
+  display: flex; align-items: flex-end; justify-content: center;
+  padding: 40px 40px 0; position: relative; z-index: 1;
+}
+.phone-mockup {
+  width: 240px; aspect-ratio: 9/17;
+  background: linear-gradient(155deg, #263680 0%, #0a1230 100%);
+  border-radius: 36px 36px 0 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 72px; position: relative;
+  box-shadow: 0 -16px 60px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.1);
+}
+.phone-mockup::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 35%; background: linear-gradient(to bottom, rgba(255,255,255,.05), transparent); border-radius: 36px 36px 0 0; }
+.phone-price-card {
+  position: absolute; bottom: 24px; right: -28px;
+  background: var(--white); border-radius: 14px; padding: 12px 16px;
+  box-shadow: var(--shlg); min-width: 152px;
+}
+.ppc-label { font-size: 10px; color: var(--g400); text-transform: uppercase; letter-spacing: 1px; }
+.ppc-price { font-size: 24px; font-weight: 900; color: var(--navy); letter-spacing: -1px; line-height: 1.15; }
+.ppc-quota { font-size: 11px; color: var(--green); font-weight: 600; margin-top: 2px; }
+.slide-dots {
+  position: absolute; left: -28px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 6px;
+}
+.sdot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.22); cursor: pointer; transition: all .2s; }
+.sdot.active { background: var(--yellow); height: 18px; border-radius: 3px; }
+
+/* ─── B · BENEFITS STRIP ───────────────────────────── */
+.benefits-strip {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  border-bottom: 1px solid var(--g200);
+}
+.benefit {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 24px; border-right: 1px solid var(--g200);
+  transition: background .15s;
+}
+.benefit:last-child { border-right: none; }
+.benefit:hover { background: var(--g50); }
+.benefit-ico { width: 38px; height: 38px; border-radius: 10px; background: var(--ylite); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.benefit-text strong { display: block; font-size: 13px; font-weight: 700; color: var(--navy); }
+.benefit-text span { font-size: 11px; color: var(--g600); font-family: 'DM Sans', sans-serif; }
+
+/* ─── C · BRAND QUICK FILTER ───────────────────────── */
+.brand-filter-section {
+  background: var(--white);
+  padding: 20px 48px;
+  border-bottom: 1px solid var(--g200);
+}
+.bfs-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.bfs-title { font-size: 15px; font-weight: 700; color: var(--navy); }
+.bfs-link { font-size: 12px; font-weight: 600; color: var(--blue); }
+.bfs-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.bfc {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 16px; border-radius: 10px;
+  border: 2px solid var(--g200); background: var(--white);
+  cursor: pointer; transition: all .2s; flex-shrink: 0;
+}
+.bfc:hover { border-color: var(--navy); }
+.bfc.active { border-color: var(--navy); background: var(--navy); }
+.bfc.active .bfc-label { color: var(--white); }
+.bfc-emoji { font-size: 18px; }
+.bfc-label { font-size: 13px; font-weight: 700; color: var(--g900); transition: color .2s; }
+
+/* ─── PROMO BANNERS (between C and D) ──────────────── */
+.promo-section { background: var(--g50); padding: 32px 48px; }
+.sec-hdr { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+.sec-title { font-size: 22px; font-weight: 800; color: var(--navy); letter-spacing: -.6px; }
+.sec-link { font-size: 13px; font-weight: 600; color: var(--blue); }
+.promo-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  grid-template-rows: 170px 170px;
+  gap: 14px;
+}
+.pcard {
+  border-radius: var(--rlg); overflow: hidden; position: relative;
+  cursor: pointer; transition: transform .3s, box-shadow .3s;
+}
+.pcard:hover { transform: translateY(-4px); box-shadow: var(--shlg); }
+.pcard.tall { grid-row: 1 / 3; }
+.pcard-content {
+  position: absolute; inset: 0; padding: 20px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  background: linear-gradient(to top, rgba(0,0,0,.72) 0%, transparent 55%);
+}
+.ptag { display: inline-block; background: var(--yellow); color: var(--navy); font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; letter-spacing: .4px; text-transform: uppercase; margin-bottom: 5px; width: fit-content; }
+.pname { font-size: 18px; font-weight: 800; color: var(--white); line-height: 1.2; margin-bottom: 4px; }
+.pcard.tall .pname { font-size: 26px; }
+.pprice { font-size: 13px; color: rgba(255,255,255,.75); margin-bottom: 8px; }
+.pcta { display: inline-flex; align-items: center; gap: 5px; background: var(--white); color: var(--navy); font-size: 12px; font-weight: 700; padding: 7px 14px; border-radius: 100px; width: fit-content; transition: all .2s; }
+.pcard:hover .pcta { background: var(--yellow); }
+
+/* ─── D · SIDEBAR + GRID LAYOUT ────────────────────── */
+.catalog-section { background: var(--g50); padding: 0 48px 48px; }
+/* toolbar row (active filter chips + sort) */
+.toolbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 20px 0 16px; flex-wrap: wrap;
+}
+.tlabel { font-size: 12px; font-weight: 700; color: var(--g600); flex-shrink: 0; }
+.active-chips { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
+.achip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--navy); color: var(--white);
+  font-size: 11px; font-weight: 700; padding: 5px 10px 5px 12px; border-radius: 100px;
+}
+.achip.yellow { background: var(--yellow); color: var(--navy); }
+.achip-x { cursor: pointer; opacity: .6; transition: opacity .15s; }
+.achip-x:hover { opacity: 1; }
+.clear-all { font-size: 12px; font-weight: 600; color: var(--blue); cursor: pointer; text-decoration: underline; flex-shrink: 0; }
+.t-count { font-size: 12px; color: var(--g400); flex-shrink: 0; }
+.t-sort {
+  background: var(--white); border: 1px solid var(--g200); border-radius: 100px;
+  padding: 7px 12px; font-size: 12px; color: var(--g600); outline: none; cursor: pointer; flex-shrink: 0;
+}
+.t-views { display: flex; gap: 4px; }
+.tvbtn {
+  width: 30px; height: 30px; border-radius: 7px; border: none;
+  display: flex; align-items: center; justify-content: center; font-size: 13px;
+  cursor: pointer; transition: all .2s;
+}
+.tvbtn.on { background: var(--navy); color: var(--white); }
+.tvbtn.off { background: var(--white); border: 1px solid var(--g200); color: var(--g600); }
+
+/* sidebar + main */
+.catalog-body { display: grid; grid-template-columns: 210px 1fr; gap: 20px; }
+
+/* SIDEBAR */
+.sidebar {
+  background: var(--white); border-radius: var(--rlg);
+  border: 1px solid var(--g200); padding: 18px;
+  position: sticky; top: 108px; align-self: start;
+}
+.sb-title { font-size: 13px; font-weight: 800; color: var(--navy); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--g100); }
+.sb-section { margin-bottom: 16px; }
+.sb-section-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 11px; font-weight: 700; color: var(--navy); text-transform: uppercase;
+  letter-spacing: .7px; margin-bottom: 10px; cursor: pointer;
+}
+.sb-section-hdr span { font-size: 10px; color: var(--g400); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.price-display { background: var(--g50); border: 1px solid var(--g200); border-radius: 8px; padding: 8px 12px; font-size: 12px; color: var(--g600); margin-bottom: 8px; }
+.price-track { height: 4px; background: var(--g200); border-radius: 2px; margin: 4px; position: relative; }
+.price-fill { position: absolute; left: 10%; right: 12%; height: 4px; background: var(--navy); border-radius: 2px; }
+.price-handle { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--navy); border: 2px solid var(--white); box-shadow: 0 1px 4px rgba(0,0,0,.2); top: -4px; }
+.sb-divider { height: 1px; background: var(--g100); margin: 12px 0; }
+.sb-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 0; cursor: pointer;
+}
+.sb-check {
+  width: 15px; height: 15px; border-radius: 4px; flex-shrink: 0;
+  border: 2px solid var(--g200); background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.sb-check.on { background: var(--navy); border-color: var(--navy); }
+.sb-check.on::after { content: '✓'; font-size: 9px; color: var(--white); }
+.sb-row-label { font-size: 12px; color: var(--g900); flex: 1; }
+.sb-row-count { font-size: 10px; color: var(--g400); }
+.sb-bar { height: 3px; background: var(--g100); border-radius: 2px; margin: 2px 0 6px; overflow: hidden; }
+.sb-bar-fill { height: 3px; background: var(--navy); border-radius: 2px; }
+.sb-apply {
+  width: 100%; background: var(--navy); color: var(--white); border: none;
+  border-radius: 9px; padding: 11px; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: background .2s; margin-top: 4px;
+}
+.sb-apply:hover { background: var(--blue); }
+.sb-clear { text-align: center; margin-top: 7px; font-size: 11px; color: var(--g400); cursor: pointer; text-decoration: underline; }
+
+/* ─── E · FEATURED ROW (3 cols) ────────────────────── */
+.grid-area { min-width: 0; }
+.grid-section-label { font-size: 10px; font-weight: 700; color: var(--g400); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+.featured-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 20px; }
+
+/* Product card shared */
+.pcard-product {
+  background: var(--white); border-radius: var(--rlg);
+  border: 1px solid var(--g200); overflow: hidden;
+  transition: all .28s ease; cursor: pointer; position: relative;
+}
+.pcard-product:hover { transform: translateY(-5px); box-shadow: var(--shlg); border-color: transparent; }
+.pcard-product.featured-card { border: 2px solid var(--yellow); }
+.prod-img {
+  aspect-ratio: 1; background: var(--g100);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 64px; position: relative; overflow: hidden;
+}
+.prod-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg,rgba(255,255,255,.35),transparent 55%); pointer-events: none; }
+.badge {
+  position: absolute; top: 10px; left: 10px; z-index: 1;
+  font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 5px; letter-spacing: .3px;
+}
+.badge.sale { background: var(--red); color: var(--white); }
+.badge.new  { background: var(--green); color: var(--white); }
+.badge.hot  { background: var(--yellow); color: var(--navy); }
+.btn-compare-ico {
+  position: absolute; top: 10px; right: 10px; z-index: 1;
+  width: 30px; height: 30px; border-radius: 8px;
+  background: rgba(255,255,255,.88); border: 1px solid var(--g200);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; cursor: pointer; transition: all .2s;
+}
+.btn-compare-ico:hover, .btn-compare-ico.on { background: var(--navy); color: var(--white); border-color: var(--navy); }
+.btn-wish {
+  position: absolute; bottom: 10px; right: 10px; z-index: 1;
+  width: 28px; height: 28px; border-radius: 7px;
+  background: rgba(255,255,255,.88); border: 1px solid var(--g200);
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+  cursor: pointer; transition: transform .2s;
+}
+.btn-wish:hover { transform: scale(1.18); }
+.prod-body { padding: 14px; }
+.prod-brand { font-size: 10px; font-weight: 700; color: var(--g400); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 3px; }
+.prod-name { font-size: 14px; font-weight: 700; color: var(--g900); line-height: 1.3; margin-bottom: 9px; }
+.prod-specs { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+.stag { font-size: 10px; font-weight: 600; padding: 3px 7px; border-radius: 5px; }
+.stag.hl { background: #EEF2FF; color: var(--blue); }
+.stag.nm { background: var(--g100); color: var(--g600); }
+.prod-prices { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+.prod-price-main { font-size: 20px; font-weight: 900; color: var(--navy); letter-spacing: -.5px; }
+.prod-price-old  { font-size: 13px; color: var(--g400); text-decoration: line-through; }
+.quota-box {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--ylite); border: 1px solid rgba(245,184,0,.35);
+  border-radius: 8px; padding: 7px 10px; margin-bottom: 11px;
+}
+.quota-box-text strong { display: block; font-size: 11px; font-weight: 700; color: #7A5500; }
+.quota-box-text span   { font-size: 10px; color: #A07020; font-family: 'DM Sans', sans-serif; }
+.prod-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.btn-cart {
+  background: var(--navy); color: var(--white); border: none;
+  border-radius: 9px; padding: 10px 8px; font-size: 12px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;
+  transition: background .2s;
+}
+.btn-cart:hover { background: var(--blue); }
+.btn-buynow {
+  background: var(--yellow); color: var(--navy); border: none;
+  border-radius: 9px; padding: 10px 8px; font-size: 12px; font-weight: 800;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;
+  transition: all .2s;
+}
+.btn-buynow:hover { background: #ffc820; transform: scale(1.02); }
+
+/* ─── F · OPERATOR BANNER ──────────────────────────── */
+.operator-banner {
+  background: linear-gradient(135deg, var(--navy) 0%, #1E3A8A 100%);
+  border-radius: var(--rlg); padding: 18px 22px;
+  display: flex; align-items: center; gap: 18px;
+  margin-bottom: 20px;
+}
+.ob-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,.4); letter-spacing: 1.5px; text-transform: uppercase; flex-shrink: 0; }
+.ob-ops { display: flex; gap: 10px; flex: 1; }
+.ob-op {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,.1); border-radius: 10px; padding: 10px 14px; flex: 1;
+}
+.ob-op-ico { font-size: 22px; }
+.ob-op-name { font-size: 12px; font-weight: 700; color: var(--white); }
+.ob-op-sub  { font-size: 10px; color: rgba(255,255,255,.45); }
+.ob-cta {
+  background: var(--yellow); color: var(--navy); border: none;
+  border-radius: 9px; padding: 11px 18px; font-size: 12px; font-weight: 800;
+  cursor: pointer; flex-shrink: 0; transition: all .2s;
+}
+.ob-cta:hover { background: #ffc820; }
+
+/* ─── G · FULL GRID 4 COLS ─────────────────────────── */
+.full-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 22px; }
+
+/* Pagination */
+.pagination { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 4px 0 8px; }
+.pgbtn {
+  width: 34px; height: 34px; border-radius: 8px; border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; cursor: pointer; transition: all .15s;
+}
+.pgbtn.pg-num { background: var(--white); border: 1px solid var(--g200); color: var(--g600); }
+.pgbtn.pg-num:hover { border-color: var(--navy); color: var(--navy); }
+.pgbtn.pg-active { background: var(--navy); color: var(--white); border: none; font-weight: 700; }
+.pgbtn.pg-arrow { background: var(--white); border: 1px solid var(--g200); color: var(--g600); font-size: 16px; }
+
+/* ─── CREDIT MODULE ────────────────────────────────── */
+.credit-section {
+  background: linear-gradient(135deg, var(--navy) 0%, #1E3A8A 100%);
+  padding: 56px 48px;
+  display: grid; grid-template-columns: 1fr 400px; gap: 52px; align-items: center;
+}
+.credit-left .sec-title { font-size: 32px; font-weight: 900; color: var(--white); letter-spacing: -.8px; line-height: 1.1; }
+.credit-left .sec-title em { font-style: normal; color: var(--yellow); }
+.credit-desc { font-family: 'DM Sans', sans-serif; font-size: 15px; color: rgba(255,255,255,.55); line-height: 1.65; margin: 14px 0 26px; }
+.steps { display: flex; flex-direction: column; gap: 14px; }
+.step { display: flex; align-items: flex-start; gap: 11px; }
+.step-n { width: 26px; height: 26px; border-radius: 50%; background: var(--yellow); color: var(--navy); font-size: 12px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-t strong { display: block; font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 2px; }
+.step-t span   { font-size: 12px; color: rgba(255,255,255,.45); font-family: 'DM Sans', sans-serif; }
+.credit-card { background: var(--white); border-radius: 20px; padding: 26px; box-shadow: var(--shlg); }
+.cc-title { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+.cc-sub   { font-size: 12px; color: var(--g600); margin-bottom: 18px; font-family: 'DM Sans', sans-serif; }
+.ci-wrap { position: relative; margin-bottom: 14px; }
+.ci-wrap input {
+  width: 100%; background: var(--g50); border: 2px solid var(--g200);
+  border-radius: 10px; padding: 13px 14px 13px 42px;
+  font-size: 17px; font-weight: 700; color: var(--navy); letter-spacing: 2px; outline: none; transition: all .2s;
+}
+.ci-wrap input:focus { border-color: var(--blue); background: var(--white); }
+.ci-wrap input::placeholder { color: var(--g200); font-weight: 400; letter-spacing: 0; font-size: 14px; }
+.ci-ico { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 18px; }
+.btn-check {
+  width: 100%; background: var(--navy); color: var(--white); border: none;
+  border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: background .2s; display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+.btn-check:hover { background: var(--blue); }
+.approved-box {
+  display: none; align-items: center; gap: 10px;
+  background: rgba(13,154,94,.08); border: 1px solid rgba(13,154,94,.28);
+  border-radius: 10px; padding: 12px; margin-top: 12px;
+}
+.approved-box.show { display: flex; }
+.approved-box strong { display: block; font-size: 14px; font-weight: 800; color: var(--green); }
+.approved-box span   { font-size: 12px; color: var(--g600); }
+.cc-div { display: flex; align-items: center; gap: 10px; margin: 14px 0; }
+.cc-div::before, .cc-div::after { content: ''; flex: 1; height: 1px; background: var(--g200); }
+.cc-div-text { font-size: 11px; color: var(--g400); font-family: 'DM Sans', sans-serif; }
+.cc-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cc-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  background: var(--g50); border: 1px solid var(--g200); border-radius: 9px;
+  padding: 10px; font-size: 12px; color: var(--g600); cursor: pointer; transition: all .2s;
+}
+.cc-btn:hover { background: var(--white); border-color: var(--g400); }
+
+/* ─── H · ACCESSORIES ──────────────────────────────── */
+.acc-section { padding: 48px 48px; background: var(--white); }
+.acc-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; }
+.acc-card {
+  background: var(--white); border-radius: var(--rlg);
+  border: 1px solid var(--g200); padding: 18px 12px 14px;
+  text-align: center; cursor: pointer; transition: all .25s;
+}
+.acc-card:hover { transform: translateY(-4px); box-shadow: var(--sh); border-color: transparent; }
+.acc-emoji { font-size: 40px; display: block; margin-bottom: 9px; }
+.acc-name  { font-size: 12px; font-weight: 700; color: var(--g900); margin-bottom: 3px; }
+.acc-price { font-size: 14px; font-weight: 800; color: var(--navy); }
+.acc-quota { font-size: 10px; color: var(--green); margin-top: 2px; }
+.acc-cta   { margin-top: 9px; font-size: 11px; font-weight: 700; color: var(--blue); }
+
+/* ─── FOOTER ────────────────────────────────────────── */
+.footer { background: var(--navy); padding: 44px 48px 22px; }
+.footer-grid { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr 1fr; gap: 28px; margin-bottom: 36px; }
+.footer-tagline { font-size: 13px; color: rgba(255,255,255,.4); margin-top: 10px; line-height: 1.6; font-family: 'DM Sans', sans-serif; max-width: 200px; }
+.footer-apps { display: flex; gap: 8px; margin-top: 18px; }
+.appbtn { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.11); border-radius: 9px; padding: 7px 12px; cursor: pointer; transition: all .2s; }
+.appbtn:hover { background: rgba(255,255,255,.12); }
+.appbtn-text small { display: block; font-size: 9px; color: rgba(255,255,255,.45); }
+.appbtn-text strong { font-size: 12px; color: var(--white); }
+.footer-col h4 { font-size: 11px; font-weight: 700; color: var(--white); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 14px; }
+.footer-col a { display: block; font-size: 12px; color: rgba(255,255,255,.42); margin-bottom: 9px; font-family: 'DM Sans', sans-serif; transition: color .2s; }
+.footer-col a:hover { color: var(--white); }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,.07); padding-top: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.footer-bottom p { font-size: 11px; color: rgba(255,255,255,.28); font-family: 'DM Sans', sans-serif; }
+.social-row { display: flex; gap: 8px; }
+.socbtn { width: 32px; height: 32px; background: rgba(255,255,255,.07); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; transition: all .2s; }
+.socbtn:hover { background: rgba(255,255,255,.15); transform: translateY(-2px); }
+
+/* ─── COMPARE BAR ───────────────────────────────────── */
+.compare-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 300;
+  background: var(--navy); border-top: 2px solid var(--yellow);
+  padding: 12px 48px; display: flex; align-items: center; gap: 16px;
+  transform: translateY(100%); transition: transform .3s ease;
+}
+.compare-bar.up { transform: translateY(0); }
+.cbar-label { font-size: 13px; font-weight: 700; color: var(--white); flex-shrink: 0; }
+.cbar-slots { display: flex; gap: 10px; flex: 1; }
+.cslot {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.07); border: 1px dashed rgba(255,255,255,.2);
+  border-radius: 9px; padding: 8px 13px; min-width: 170px;
+}
+.cslot.filled { border-style: solid; border-color: rgba(245,184,0,.4); background: rgba(245,184,0,.07); }
+.cslot-emoji { font-size: 18px; }
+.cslot-text  { font-size: 11px; color: rgba(255,255,255,.5); flex: 1; }
+.cslot-text strong { display: block; font-size: 12px; color: var(--white); }
+.cslot-x { font-size: 14px; color: rgba(255,255,255,.3); cursor: pointer; }
+.cslot-x:hover { color: var(--white); }
+.btn-compare-now {
+  background: var(--yellow); color: var(--navy); border: none;
+  border-radius: 9px; padding: 11px 22px; font-size: 13px; font-weight: 800;
+  cursor: pointer; flex-shrink: 0; transition: all .2s;
+}
+.btn-compare-now:hover { background: #ffc820; }
+.btn-compare-now:disabled { opacity: .38; cursor: not-allowed; }
+
+/* ─── COMPARE MODAL ─────────────────────────────────── */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 400; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.overlay.show { display: flex; }
+.modal { background: var(--white); border-radius: 22px; padding: 32px; width: 90%; max-width: 540px; box-shadow: 0 24px 80px rgba(0,0,0,.28); position: relative; animation: fadeup .28s ease; }
+@keyframes fadeup { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+.modal-close { position: absolute; top: 14px; right: 14px; background: var(--g100); border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; }
+.modal-close:hover { background: var(--g200); }
+.modal-title { font-size: 20px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+.modal-sub   { font-size: 13px; color: var(--g600); margin-bottom: 20px; font-family: 'DM Sans', sans-serif; }
+.ctable { width: 100%; border-collapse: collapse; }
+.ctable th { background: var(--navy); color: var(--white); padding: 11px 14px; font-size: 13px; text-align: center; }
+.ctable td { padding: 9px 14px; font-size: 12px; text-align: center; border-bottom: 1px solid var(--g100); }
+.ctable td:first-child { text-align: left; font-weight: 600; color: var(--g600); }
+.ctable tr:nth-child(even) td { background: var(--g50); }
+.ctable .win { color: var(--green); font-weight: 800; }
+.modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+
+/* ─── CHAT FAB ──────────────────────────────────────── */
+.chat-fab { position: fixed; bottom: 26px; right: 26px; z-index: 250; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.chat-bubble {
+  background: var(--white); border-radius: 14px 14px 4px 14px; padding: 11px 15px;
+  box-shadow: var(--shlg); font-size: 12px; color: var(--g900); max-width: 210px;
+  border: 1px solid var(--g200); animation: fadeup .3s ease; display: none;
+}
+.chat-bubble.show { display: block; }
+.chat-bubble strong { display: block; margin-bottom: 2px; font-size: 13px; }
+.chat-btn {
+  width: 52px; height: 52px; border-radius: 50%; background: #25D366;
+  border: none; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 18px rgba(37,211,102,.45); transition: all .25s; position: relative;
+}
+.chat-btn:hover { transform: scale(1.1); box-shadow: 0 6px 26px rgba(37,211,102,.55); }
+.chat-badge { position: absolute; top: -2px; right: -2px; width: 17px; height: 17px; background: var(--red); border-radius: 50%; border: 2px solid var(--white); font-size: 9px; font-weight: 900; color: var(--white); display: flex; align-items: center; justify-content: center; }
+
+/* ─── TOAST ─────────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 88px; right: 26px; z-index: 500;
+  background: var(--navy); color: var(--white); border-radius: 10px;
+  padding: 11px 18px; font-size: 13px; font-weight: 600;
+  border-left: 4px solid var(--yellow); box-shadow: var(--shlg);
+  transform: translateY(14px); opacity: 0; transition: all .28s ease; pointer-events: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- ══ ENTRY POINT BANNER ══════════════════════════════ -->
+<div class="entry-banner">
+  <span class="entry-banner-label">🏠 Simulación — Entry point en la Home de Tienda Amiga</span>
+  <div class="entry-pill" onclick="document.getElementById('top').scrollIntoView({behavior:'smooth'})">
+    <div class="entry-pill-icon">📱</div>
+    <div class="entry-pill-text">
+      <small>Nueva experiencia</small>
+      <strong>Celulares · Ver ahora →</strong>
+    </div>
+  </div>
+  <div style="width:220px;"></div>
+</div>
+
+<!-- ══ HEADER ══════════════════════════════════════════ -->
+<header class="site-header" id="top">
+  <div class="header-row1">
+    <a class="back-link" href="#">← Tienda Amiga</a>
+    <div class="divider-v"></div>
+    <div class="logo">
+      <div class="logo-badge">TA</div>
+      <div class="logo-name">Celulares</div>
+    </div>
+    <div class="search-wrap">
+      <span class="search-ico">🔍</span>
+      <input type="text" placeholder="Buscar marca, modelo, características...">
+    </div>
+    <div class="header-actions">
+      <div class="hbtn">📍 Santa Cruz</div>
+      <div class="hbtn">❤️ Guardados</div>
+      <div class="hbtn cart">🛒 Carrito <div class="cart-dot">2</div></div>
+    </div>
+  </div>
+  <div class="brand-nav-bar">
+    <div class="bnav-chip active" onclick="syncBrand(this,'Todos')">Todos</div>
+    <div class="bnav-chip" onclick="syncBrand(this,'Samsung')">Samsung</div>
+    <div class="bnav-chip" onclick="syncBrand(this,'Apple')">Apple</div>
+    <div class="bnav-chip" onclick="syncBrand(this,'Xiaomi')">Xiaomi</div>
+    <div class="bnav-chip" onclick="syncBrand(this,'Motorola')">Motorola</div>
+    <div class="bnav-chip" onclick="syncBrand(this,'Huawei')">Huawei</div>
+    <div class="bnav-chip" onclick="syncBrand(this,'Oppo')">Oppo</div>
+    <div class="bnav-chip" onclick="syncBrand(this,'Realme')">Realme</div>
+    <div style="width:1px;height:18px;background:rgba(255,255,255,.1);margin:0 6px;flex-shrink:0;"></div>
+    <div class="bnav-chip" onclick="syncBrand(this,'Accesorios')">🎧 Accesorios</div>
+  </div>
+</header>
+
+<!-- ══ A · HERO ════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-radial"></div>
+  <div class="hero-left">
+    <div class="hero-eyebrow"><span></span> Nuevo ingreso · Temporada 2025</div>
+    <h1 class="hero-h1">La mejor<br>selección de<br><em>celulares</em><br>en Bolivia</h1>
+    <p class="hero-sub">Más de 120 modelos. Todas las marcas. Envío a domicilio y cuotas sin interés en Santa Cruz, La Paz y Cochabamba.</p>
+    <div class="hero-ctas">
+      <button class="btn-primary" onclick="toast('Ver ofertas del mes →')">✨ Ver ofertas del mes</button>
+      <button class="btn-ghost" onclick="toast('Explorar por marca →')">Explorar por marca</button>
+    </div>
+    <div class="credit-chip" onclick="document.getElementById('credit').scrollIntoView({behavior:'smooth'})">
+      <div class="credit-dot"></div>
+      <div class="credit-chip-text">¿Ya tenés <strong>Cuotitas aprobadas</strong>? Comprá con un toque →</div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="phone-mockup">
+      📱
+      <div class="phone-price-card">
+        <div class="ppc-label">Desde</div>
+        <div class="ppc-price">Bs. 1.299</div>
+        <div class="ppc-quota">✓ 12x Bs. 108/mes</div>
+      </div>
+      <div class="slide-dots">
+        <div class="sdot active"></div>
+        <div class="sdot"></div>
+        <div class="sdot"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ B · BENEFITS STRIP ══════════════════════════════ -->
+<div class="benefits-strip">
+  <div class="benefit"><div class="benefit-ico">🚚</div><div class="benefit-text"><strong>Envío gratis</strong><span>En compras mayores a Bs. 150</span></div></div>
+  <div class="benefit"><div class="benefit-ico">💳</div><div class="benefit-text"><strong>Cuotas sin interés</strong><span>Hasta 12 cuotas con Cuotitas</span></div></div>
+  <div class="benefit"><div class="benefit-ico">🛡️</div><div class="benefit-text"><strong>Garantía oficial</strong><span>Todos los equipos con garantía</span></div></div>
+  <div class="benefit"><div class="benefit-ico">📦</div><div class="benefit-text"><strong>Entrega rápida</strong><span>1–2 días SCZ · 5–10 días LP/CBBA</span></div></div>
+</div>
+
+<!-- ══ C · BRAND QUICK FILTER ══════════════════════════ -->
+<section class="brand-filter-section">
+  <div class="bfs-header">
+    <div class="bfs-title">Explorar por marca</div>
+    <a class="bfs-link" href="#">Ver todas las marcas →</a>
+  </div>
+  <div class="bfs-chips">
+    <div class="bfc active" id="bfc-Todos" onclick="selectBrand(this,'Todos')"><span class="bfc-emoji">📱</span><span class="bfc-label">Todos</span></div>
+    <div class="bfc" id="bfc-Samsung" onclick="selectBrand(this,'Samsung')"><span class="bfc-emoji">🔵</span><span class="bfc-label">Samsung</span></div>
+    <div class="bfc" id="bfc-Apple" onclick="selectBrand(this,'Apple')"><span class="bfc-emoji">🍎</span><span class="bfc-label">Apple</span></div>
+    <div class="bfc" id="bfc-Xiaomi" onclick="selectBrand(this,'Xiaomi')"><span class="bfc-emoji">🟠</span><span class="bfc-label">Xiaomi</span></div>
+    <div class="bfc" id="bfc-Motorola" onclick="selectBrand(this,'Motorola')"><span class="bfc-emoji">〽️</span><span class="bfc-label">Motorola</span></div>
+    <div class="bfc" id="bfc-Huawei" onclick="selectBrand(this,'Huawei')"><span class="bfc-emoji">🔴</span><span class="bfc-label">Huawei</span></div>
+    <div class="bfc" id="bfc-Oppo" onclick="selectBrand(this,'Oppo')"><span class="bfc-emoji">🟢</span><span class="bfc-label">Oppo</span></div>
+    <div class="bfc" id="bfc-Realme" onclick="selectBrand(this,'Realme')"><span class="bfc-emoji">🟡</span><span class="bfc-label">Realme</span></div>
+    <div class="bfc" id="bfc-Accesorios" onclick="selectBrand(this,'Accesorios')" style="border-style:dashed;"><span class="bfc-emoji">🎧</span><span class="bfc-label" style="color:var(--g600);">Accesorios</span></div>
+  </div>
+</section>
+
+<!-- ══ PROMO BANNERS (below C, above D) ════════════════ -->
+<section class="promo-section">
+  <div class="sec-hdr">
+    <h2 class="sec-title">Promociones destacadas</h2>
+    <a class="sec-link" href="#">Ver todas las ofertas →</a>
+  </div>
+  <div class="promo-grid">
+    <div class="pcard tall" style="background:linear-gradient(140deg,#1B2B6B,#070f2b);">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:130px;opacity:.1;">📱</div>
+      <div class="pcard-content" style="padding:28px;">
+        <div class="ptag">Samsung · Oferta del mes</div>
+        <div class="pname">Galaxy S25<br>Serie completa</div>
+        <div class="pprice">Desde Bs. 6.499 · 12x sin interés</div>
+        <div class="pcta">Ver modelos →</div>
+      </div>
+    </div>
+    <div class="pcard" style="background:linear-gradient(135deg,#2D1B69,#160a36);">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:72px;opacity:.2;">🍎</div>
+      <div class="pcard-content"><div class="ptag">Apple</div><div class="pname">iPhone 15</div><div class="pprice">Desde Bs. 8.999</div><div class="pcta">Ver →</div></div>
+    </div>
+    <div class="pcard" style="background:linear-gradient(135deg,#2E7D32,#1B5E20);">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:72px;opacity:.2;">📲</div>
+      <div class="pcard-content"><div class="ptag">Xiaomi · Nuevo</div><div class="pname">Redmi Note 13</div><div class="pprice">Bs. 1.899</div><div class="pcta">Ver →</div></div>
+    </div>
+    <div class="pcard" style="background:linear-gradient(135deg,#B71C1C,#7F0000);">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:72px;opacity:.2;">⚡</div>
+      <div class="pcard-content"><div class="ptag">Motorola · -20%</div><div class="pname">Edge 40 Neo</div><div class="pprice"><s style="opacity:.5">Bs. 2.299</s> → Bs. 1.839</div><div class="pcta">Comprar →</div></div>
+    </div>
+    <div class="pcard" style="background:linear-gradient(135deg,#E65100,#BF360C);">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:72px;opacity:.2;">🔥</div>
+      <div class="pcard-content"><div class="ptag">Outlet</div><div class="pname">Varios modelos</div><div class="pprice">Desde Bs. 899</div><div class="pcta">Ver outlet →</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ D · SIDEBAR + GRID ══════════════════════════════ -->
+<section class="catalog-section">
+
+  <!-- Toolbar: active filter chips + sort -->
+  <div class="toolbar">
+    <span class="tlabel">Filtros activos:</span>
+    <div class="active-chips">
+      <div class="achip">Samsung <span class="achip-x" onclick="toast('Filtro removido')">✕</span></div>
+      <div class="achip">5G <span class="achip-x" onclick="toast('Filtro removido')">✕</span></div>
+      <div class="achip yellow">Con Cuotitas <span class="achip-x" onclick="toast('Filtro removido')">✕</span></div>
+    </div>
+    <span class="clear-all" onclick="toast('Filtros limpiados')">Limpiar todo</span>
+    <span class="t-count">124 resultados</span>
+    <select class="t-sort"><option>Más vendidos</option><option>Menor precio</option><option>Mayor precio</option><option>Nuevos</option><option>Mayor descuento</option></select>
+    <div class="t-views">
+      <button class="tvbtn on" onclick="toast('Vista grilla')">▦</button>
+      <button class="tvbtn off" onclick="toast('Vista lista')">☰</button>
+    </div>
+  </div>
+
+  <div class="catalog-body">
+
+    <!-- SIDEBAR FILTERS -->
+    <aside class="sidebar">
+      <div class="sb-title">🔍 Filtrar productos</div>
+
+      <!-- Precio -->
+      <div class="sb-section">
+        <div class="sb-section-hdr">Precio <span>▾</span></div>
+        <div class="price-display">Bs. 500 — Bs. 8.000</div>
+        <div class="price-track">
+          <div class="price-fill"></div>
+          <div class="price-handle" style="left:calc(10% - 6px);"></div>
+          <div class="price-handle" style="right:calc(12% - 6px);left:auto;"></div>
+        </div>
+      </div>
+      <div class="sb-divider"></div>
+
+      <!-- Marca -->
+      <div class="sb-section">
+        <div class="sb-section-hdr">Marca <span>▾</span></div>
+        <div class="sb-row" onclick="toast('Filtro: Samsung')"><div class="sb-check on"></div><span class="sb-row-label">Samsung</span><span class="sb-row-count">42</span></div>
+        <div class="sb-bar"><div class="sb-bar-fill" style="width:68%"></div></div>
+        <div class="sb-row" onclick="toast('Filtro: Apple')"><div class="sb-check on"></div><span class="sb-row-label">Apple</span><span class="sb-row-count">18</span></div>
+        <div class="sb-bar"><div class="sb-bar-fill" style="width:28%"></div></div>
+        <div class="sb-row" onclick="toast('Filtro: Xiaomi')"><div class="sb-check"></div><span class="sb-row-label">Xiaomi</span><span class="sb-row-count">28</span></div>
+        <div class="sb-bar"><div class="sb-bar-fill" style="width:44%"></div></div>
+        <div class="sb-row" onclick="toast('Filtro: Motorola')"><div class="sb-check"></div><span class="sb-row-label">Motorola</span><span class="sb-row-count">15</span></div>
+        <div class="sb-bar"><div class="sb-bar-fill" style="width:24%"></div></div>
+        <div class="sb-row" onclick="toast('Filtro: Huawei')"><div class="sb-check"></div><span class="sb-row-label">Huawei</span><span class="sb-row-count">9</span></div>
+        <div class="sb-bar"><div class="sb-bar-fill" style="width:14%"></div></div>
+      </div>
+      <div class="sb-divider"></div>
+
+      <!-- RAM -->
+      <div class="sb-section">
+        <div class="sb-section-hdr">Memoria RAM <span>▾</span></div>
+        <div class="sb-row" onclick="toast('RAM: 4 GB')"><div class="sb-check"></div><span class="sb-row-label">4 GB</span><span class="sb-row-count">8</span></div>
+        <div class="sb-row" onclick="toast('RAM: 6 GB')"><div class="sb-check"></div><span class="sb-row-label">6 GB</span><span class="sb-row-count">22</span></div>
+        <div class="sb-row" onclick="toast('RAM: 8 GB')"><div class="sb-check on"></div><span class="sb-row-label">8 GB</span><span class="sb-row-count">45</span></div>
+        <div class="sb-row" onclick="toast('RAM: 12 GB')"><div class="sb-check"></div><span class="sb-row-label">12 GB</span><span class="sb-row-count">30</span></div>
+        <div class="sb-row" onclick="toast('RAM: 16 GB')"><div class="sb-check"></div><span class="sb-row-label">16 GB</span><span class="sb-row-count">12</span></div>
+      </div>
+      <div class="sb-divider"></div>
+
+      <!-- Almacenamiento -->
+      <div class="sb-section">
+        <div class="sb-section-hdr">Almacenamiento <span>▾</span></div>
+        <div class="sb-row" onclick="toast('Storage: 64 GB')"><div class="sb-check"></div><span class="sb-row-label">64 GB</span><span class="sb-row-count">15</span></div>
+        <div class="sb-row" onclick="toast('Storage: 128 GB')"><div class="sb-check on"></div><span class="sb-row-label">128 GB</span><span class="sb-row-count">52</span></div>
+        <div class="sb-row" onclick="toast('Storage: 256 GB')"><div class="sb-check"></div><span class="sb-row-label">256 GB</span><span class="sb-row-count">38</span></div>
+        <div class="sb-row" onclick="toast('Storage: 512 GB')"><div class="sb-check"></div><span class="sb-row-label">512 GB</span><span class="sb-row-count">19</span></div>
+      </div>
+      <div class="sb-divider"></div>
+
+      <!-- Red -->
+      <div class="sb-section">
+        <div class="sb-section-hdr">Red <span>▾</span></div>
+        <div class="sb-row" onclick="toast('Red: 5G')"><div class="sb-check on"></div><span class="sb-row-label">5G</span><span class="sb-row-count">78</span></div>
+        <div class="sb-row" onclick="toast('Red: 4G')"><div class="sb-check"></div><span class="sb-row-label">4G LTE</span><span class="sb-row-count">46</span></div>
+      </div>
+
+      <button class="sb-apply" onclick="toast('Filtros aplicados ✓')">Aplicar filtros</button>
+      <div class="sb-clear" onclick="toast('Filtros limpiados')">Limpiar filtros</div>
+    </aside>
+
+    <!-- GRID AREA -->
+    <div class="grid-area">
+
+      <!-- E · DESTACADOS (3 cols) -->
+      <div class="grid-section-label">⭐ Más vendidos</div>
+      <div class="featured-row">
+
+        <div class="pcard-product featured-card">
+          <div class="prod-img" style="background:linear-gradient(135deg,#e8eaf0,#cdd0df);">📱
+            <div class="badge hot">⭐ MÁS VENDIDO</div>
+            <div class="btn-compare-ico" title="Comparar" onclick="addCompare(this,'Samsung Galaxy S24','📱')">⚖️</div>
+            <div class="btn-wish">🤍</div>
+          </div>
+          <div class="prod-body">
+            <div class="prod-brand">Samsung</div>
+            <div class="prod-name">Galaxy S24 128GB</div>
+            <div class="prod-specs"><span class="stag hl">5G</span><span class="stag hl">8GB RAM</span><span class="stag nm">128GB</span><span class="stag nm">6.2"</span></div>
+            <div class="prod-prices"><span class="prod-price-main">Bs. 5.299</span><span class="prod-price-old">Bs. 5.999</span></div>
+            <div class="quota-box"><span>💳</span><div class="quota-box-text"><strong>12x Bs. 441/mes</strong><span>Sin interés con Cuotitas</span></div></div>
+            <div class="prod-btns"><button class="btn-cart" onclick="toast('Samsung S24 agregado 🛒')">🛒 Carrito</button><button class="btn-buynow" onclick="toast('Checkout directo ⚡')">⚡ Comprar</button></div>
+          </div>
+        </div>
+
+        <div class="pcard-product">
+          <div class="prod-img" style="background:linear-gradient(135deg,#f0f0f0,#e0e0e0);">🍎
+            <div class="badge new">NUEVO</div>
+            <div class="btn-compare-ico" title="Comparar" onclick="addCompare(this,'iPhone 15','🍎')">⚖️</div>
+            <div class="btn-wish">🤍</div>
+          </div>
+          <div class="prod-body">
+            <div class="prod-brand">Apple</div>
+            <div class="prod-name">iPhone 15 128GB</div>
+            <div class="prod-specs"><span class="stag hl">5G</span><span class="stag hl">A16 Chip</span><span class="stag nm">128GB</span><span class="stag nm">6.1"</span></div>
+            <div class="prod-prices"><span class="prod-price-main">Bs. 8.999</span></div>
+            <div class="quota-box"><span>💳</span><div class="quota-box-text"><strong>12x Bs. 749/mes</strong><span>Sin interés con Cuotitas</span></div></div>
+            <div class="prod-btns"><button class="btn-cart" onclick="toast('iPhone 15 agregado 🛒')">🛒 Carrito</button><button class="btn-buynow" onclick="toast('Checkout directo ⚡')">⚡ Comprar</button></div>
+          </div>
+        </div>
+
+        <div class="pcard-product">
+          <div class="prod-img" style="background:linear-gradient(135deg,#fff3e0,#ffe0b2);">📲
+            <div class="badge sale">-22%</div>
+            <div class="btn-compare-ico" title="Comparar" onclick="addCompare(this,'Xiaomi Redmi Note 13','📲')">⚖️</div>
+            <div class="btn-wish">🤍</div>
+          </div>
+          <div class="prod-body">
+            <div class="prod-brand">Xiaomi</div>
+            <div class="prod-name">Redmi Note 13 Pro 256GB</div>
+            <div class="prod-specs"><span class="stag hl">5G</span><span class="stag hl">12GB RAM</span><span class="stag nm">256GB</span></div>
+            <div class="prod-prices"><span class="prod-price-main">Bs. 2.499</span><span class="prod-price-old">Bs. 3.199</span></div>
+            <div class="quota-box"><span>💳</span><div class="quota-box-text"><strong>12x Bs. 208/mes</strong><span>Sin interés con Cuotitas</span></div></div>
+            <div class="prod-btns"><button class="btn-cart" onclick="toast('Redmi Note 13 agregado 🛒')">🛒 Carrito</button><button class="btn-buynow" onclick="toast('Checkout directo ⚡')">⚡ Comprar</button></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- F · OPERATOR BANNER INLINE -->
+      <div class="operator-banner">
+        <div class="ob-label">Planes con</div>
+        <div class="ob-ops">
+          <div class="ob-op"><div class="ob-op-ico">📡</div><div><div class="ob-op-name">Tigo Bolivia</div><div class="ob-op-sub">Planes desde Bs. 89/mes</div></div></div>
+          <div class="ob-op"><div class="ob-op-ico">📶</div><div><div class="ob-op-name">Entel Bolivia</div><div class="ob-op-sub">Planes desde Bs. 79/mes</div></div></div>
+        </div>
+        <button class="ob-cta" onclick="toast('Ver planes de datos →')">Ver planes →</button>
+      </div>
+
+      <!-- G · FULL GRID 4 cols -->
+      <div class="grid-section-label">📋 Todos los celulares</div>
+      <div class="full-grid">
+
+        <div class="pcard-product"><div class="prod-img" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);">📱<div class="badge sale">-15%</div><div class="btn-compare-ico" onclick="addCompare(this,'Motorola Edge 40','📱')">⚖️</div><div class="btn-wish">🤍</div></div><div class="prod-body"><div class="prod-brand">Motorola</div><div class="prod-name">Edge 40 Neo 256GB</div><div class="prod-specs"><span class="stag hl">5G</span><span class="stag hl">8GB</span><span class="stag nm">256GB</span></div><div class="prod-prices"><span class="prod-price-main">Bs. 1.839</span><span class="prod-price-old">Bs. 2.299</span></div><div class="quota-box"><span>💳</span><div class="quota-box-text"><strong>6x Bs. 306/mes</strong><span>Sin interés</span></div></div><div class="prod-btns"><button class="btn-cart" onclick="toast('Agregado 🛒')">🛒</button><button class="btn-buynow" onclick="toast('Checkout ⚡')">⚡ Comprar</button></div></div></div>
+
+        <div class="pcard-product"><div class="prod-img" style="background:linear-gradient(135deg,#fce4ec,#f8bbd9);">📱<div class="badge new">NUEVO</div><div class="btn-compare-ico" onclick="addCompare(this,'Samsung A55','📱')">⚖️</div><div class="btn-wish">🤍</div></div><div class="prod-body"><div class="prod-brand">Samsung</div><div class="prod-name">Galaxy A55 256GB</div><div class="prod-specs"><span class="stag hl">5G</span><span class="stag hl">8GB</span><span class="stag nm">256GB</span></div><div class="prod-prices"><span class="prod-price-main">Bs. 3.199</span></div><div class="quota-box"><span>💳</span><div class="quota-box-text"><strong>12x Bs. 266/mes</strong><span>Sin interés</span></div></div><div class="prod-btns"><button class="btn-cart" onclick="toast('Agregado 🛒')">🛒</button><button class="btn-buynow" onclick="toast('Checkout ⚡')">⚡ Comprar</button></div></div></div>
+
+        <div class="pcard-product"><div class="prod-img" style="background:linear-gradient(135deg,#e3f2fd,#bbdefb);">📲<div class="badge sale">-10%</div><div class="btn-compare-ico" onclick="addCompare(this,'Xiaomi 14 Pro','📲')">⚖️</div><div class="btn-wish">🤍</div></div><div class="prod-body"><div class="prod-brand">Xiaomi</div><div class="prod-name">Xiaomi 14 Pro 512GB</div><div class="prod-specs"><span class="stag hl">5G</span><span class="stag hl">16GB</span><span class="stag nm">512GB</span></div><div class="prod-prices"><span class="prod-price-main">Bs. 7.199</span><span class="prod-price-old">Bs. 7.999</span></div><div class="quota-box"><span>💳</span><div class="quota-box-text"><strong>12x Bs. 599/mes</strong><span>Sin interés</span></div></div><div class="prod-btns"><button class="btn-cart" onclick="toast('Agregado 🛒')">🛒</button><button class="btn-buynow" onclick="toast('Checkout ⚡')">⚡ Comprar</button></div></div></div>
+
+        <div class="pcard-product"><div class="prod-img" style="background:linear-gradient(135deg,#f3e5f5,#e1bee7);">📱<div class="btn-compare-ico" onclick="addCompare(this,'Oppo Reno 11','📱')">⚖️</div><div class="btn-wish">🤍</div></div><div class="prod-body"><div class="prod-brand">Oppo</div><div class="prod-name">Reno 11 Pro 256GB</div><div class="prod-specs"><span class="stag hl">5G</span><span class="stag hl">12GB</span><span class="stag nm">256GB</span></div><div class="prod-prices"><span class="prod-price-main">Bs. 4.299</span></div><div class="quota-box"><span>💳</span><div class="quota-box-text"><strong>12x Bs. 358/mes</strong><span>Sin interés</span></div></div><div class="prod-btns"><button class="btn-cart" onclick="toast('Agregado 🛒')">🛒</button><button class="btn-buynow" onclick="toast('Checkout ⚡')">⚡ Comprar</button></div></div></div>
+
+        <div class="pcard-product"><div class="prod-img" style="background:linear-gradient(135deg,#fffde7,#fff9c4);">📱<div class="badge sale">-25%</div><div class="btn-compare-ico" onclick="addCompare(this,'Realme C55','📱')">⚖️</div><div class="btn-wish">🤍</div></div><div class="prod-body"><div class="prod-brand">Realme</div><div class="prod-name">C55 128GB</div><div class="prod-specs"><span class="stag nm">4G</span><span class="stag hl">8GB</span><span class="stag nm">128GB</span></div><div class="prod-prices"><span class="prod-price-main">Bs. 1.299</span><span class="prod-price-old">Bs. 1.749</span></div><div class="quota-box"><span>💳</span><div class="quota-box-text"><strong>6x Bs. 216/mes</strong><span>Sin interés</span></div></div><div class="prod-btns"><button class="btn-cart" onclick="toast('Agregado 🛒')">🛒</button><button class="btn-buynow" onclick="toast('Checkout ⚡')">⚡ Comprar</button></div></div></div>
+
+        <div class="pcard-product"><div class="prod-img" style="background:linear-gradient(135deg,#e0f2f1,#b2dfdb);">📱<div class="btn-compare-ico" onclick="addCompare(this,'Huawei Nova 11','📱')">⚖️</div><div class="btn-wish">🤍</div></div><div class="prod-body"><div class="prod-brand">Huawei</div><div class="prod-name">Nova 11 Pro 256GB</div><div class="prod-specs"><span class="stag nm">4G</span><span class="stag hl">8GB</span><span class="stag nm">256GB</span></div><div class="prod-prices"><span class="prod-price-main">Bs. 3.499</span></div><div class="quota-box"><span>💳</span><div class="quota-box-text"><strong>12x Bs. 291/mes</strong><span>Sin interés</span></div></div><div class="prod-btns"><button class="btn-cart" onclick="toast('Agregado 🛒')">🛒</button><button class="btn-buynow" onclick="toast('Checkout ⚡')">⚡ Comprar</button></div></div></div>
+
+        <div class="pcard-product"><div class="prod-img" style="background:linear-gradient(135deg,#fbe9e7,#ffccbc);">📲<div class="badge hot">🔥 OFERTA</div><div class="btn-compare-ico" onclick="addCompare(this,'Samsung A34','📲')">⚖️</div><div class="btn-wish">🤍</div></div><div class="prod-body"><div class="prod-brand">Samsung</div><div class="prod-name">Galaxy A34 128GB</div><div class="prod-specs"><span class="stag nm">4G</span><span class="stag hl">6GB</span><span class="stag nm">128GB</span></div><div class="prod-prices"><span class="prod-price-main">Bs. 1.599</span><span class="prod-price-old">Bs. 1.999</span></div><div class="quota-box"><span>💳</span><div class="quota-box-text"><strong>6x Bs. 266/mes</strong><span>Sin interés</span></div></div><div class="prod-btns"><button class="btn-cart" onclick="toast('Agregado 🛒')">🛒</button><button class="btn-buynow" onclick="toast('Checkout ⚡')">⚡ Comprar</button></div></div></div>
+
+        <div class="pcard-product"><div class="prod-img" style="background:linear-gradient(135deg,#e8eaf6,#c5cae9);">📱<div class="btn-compare-ico" onclick="addCompare(this,'Moto G84','📱')">⚖️</div><div class="btn-wish">🤍</div></div><div class="prod-body"><div class="prod-brand">Motorola</div><div class="prod-name">Moto G84 256GB</div><div class="prod-specs"><span class="stag hl">5G</span><span class="stag hl">12GB</span><span class="stag nm">256GB</span></div><div class="prod-prices"><span class="prod-price-main">Bs. 2.199</span></div><div class="quota-box"><span>💳</span><div class="quota-box-text"><strong>12x Bs. 183/mes</strong><span>Sin interés</span></div></div><div class="prod-btns"><button class="btn-cart" onclick="toast('Agregado 🛒')">🛒</button><button class="btn-buynow" onclick="toast('Checkout ⚡')">⚡ Comprar</button></div></div></div>
+
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <button class="pgbtn pg-arrow" onclick="toast('Anterior')">‹</button>
+        <button class="pgbtn pg-active">1</button>
+        <button class="pgbtn pg-num" onclick="toast('Página 2')">2</button>
+        <button class="pgbtn pg-num" onclick="toast('Página 3')">3</button>
+        <span style="font-size:13px;color:var(--g400);padding:0 4px;">...</span>
+        <button class="pgbtn pg-num" onclick="toast('Página 12')">12</button>
+        <button class="pgbtn pg-arrow" onclick="toast('Siguiente')">›</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CREDIT MODULE ════════════════════════════════════ -->
+<section class="credit-section" id="credit">
+  <div class="credit-left">
+    <div class="sec-title">Comprá con tus<br><em>Cuotitas</em> aprobadas</div>
+    <p class="credit-desc">Si ya tenés un crédito activo con Tienda Amiga, ingresá tu CI y comprá al instante. Sin trámites adicionales.</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-t"><strong>Ingresá tu CI</strong><span>Verificamos tu crédito en segundos</span></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-t"><strong>Crédito confirmado al instante</strong><span>Ves tu monto y elegís las cuotas</span></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-t"><strong>Comprá con un toque</strong><span>Sin formularios. Directo al checkout.</span></div></div>
+    </div>
+  </div>
+  <div class="credit-card">
+    <div class="cc-title">Verificar crédito disponible</div>
+    <div class="cc-sub">Ingresá tu número de cédula de identidad (CI)</div>
+    <div class="ci-wrap">
+      <span class="ci-ico">🪪</span>
+      <input type="text" id="ciInput" placeholder="Ej: 12345678" maxlength="12" oninput="this.value=this.value.replace(/\D/g,'')">
+    </div>
+    <button class="btn-check" onclick="checkCredit()">🔍 Verificar crédito</button>
+    <div class="approved-box" id="approvedBox">
+      <span style="font-size:26px;">✅</span>
+      <div><strong>¡Crédito aprobado! Bs. 5.000</strong><span>Podés comprar ahora en hasta 12 cuotas sin interés</span></div>
+    </div>
+    <div class="cc-div"><span class="cc-div-text">o si aún no tenés cuotas</span></div>
+    <div class="cc-actions">
+      <div class="cc-btn" onclick="toast('Solicitud de Cuotitas →')">📋 Solicitar cuotas</div>
+      <div class="cc-btn" onclick="toast('Iniciar sesión →')">👤 Iniciar sesión</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ H · ACCESORIOS ══════════════════════════════════ -->
+<section class="acc-section">
+  <div class="sec-hdr">
+    <h2 class="sec-title">Accesorios para tu celular</h2>
+    <a class="sec-link" href="#">Ver todos los accesorios →</a>
+  </div>
+  <div class="acc-grid">
+    <div class="acc-card"><span class="acc-emoji">🎧</span><div class="acc-name">Audífonos Bluetooth</div><div class="acc-price">Bs. 299</div><div class="acc-quota">6x Bs. 49/mes</div><div class="acc-cta">Ver opciones →</div></div>
+    <div class="acc-card"><span class="acc-emoji">🔌</span><div class="acc-name">Cargador Rápido 65W</div><div class="acc-price">Bs. 189</div><div class="acc-quota">Pago inmediato</div><div class="acc-cta">Agregar →</div></div>
+    <div class="acc-card"><span class="acc-emoji">🛡️</span><div class="acc-name">Protector de Pantalla</div><div class="acc-price">Bs. 89</div><div class="acc-quota">Pago inmediato</div><div class="acc-cta">Agregar →</div></div>
+    <div class="acc-card"><span class="acc-emoji">🔋</span><div class="acc-name">Power Bank 20.000 mAh</div><div class="acc-price">Bs. 449</div><div class="acc-quota">6x Bs. 74/mes</div><div class="acc-cta">Ver opciones →</div></div>
+    <div class="acc-card"><span class="acc-emoji">📦</span><div class="acc-name">Carcasa Premium</div><div class="acc-price">Bs. 129</div><div class="acc-quota">Pago inmediato</div><div class="acc-cta">Agregar →</div></div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ═══════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="logo-badge" style="display:inline-block;font-size:16px;padding:5px 12px;">TA</div>
+      <p class="footer-tagline">Todo lo que necesitás para el hogar y tu tecnología. Envíos a Santa Cruz, La Paz y Cochabamba.</p>
+      <div class="footer-apps">
+        <div class="appbtn"><span style="font-size:20px;">🍎</span><div class="appbtn-text"><small>Descargar en</small><strong>App Store</strong></div></div>
+        <div class="appbtn"><span style="font-size:20px;">🤖</span><div class="appbtn-text"><small>Descargar en</small><strong>Google Play</strong></div></div>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Celulares</h4><a href="#">Samsung</a><a href="#">Apple</a><a href="#">Xiaomi</a><a href="#">Motorola</a><a href="#">Ver todas</a></div>
+    <div class="footer-col"><h4>Ayuda</h4><a href="#">Rastrear pedido</a><a href="#">Devoluciones</a><a href="#">Garantías</a><a href="#">Contacto</a></div>
+    <div class="footer-col"><h4>Cuotitas</h4><a href="#">¿Cómo funciona?</a><a href="#">Solicitar crédito</a><a href="#">Ver mi cuota</a><a href="#">Términos</a></div>
+    <div class="footer-col"><h4>Tiendas</h4><a href="#">Santa Cruz</a><a href="#">La Paz</a><a href="#">Cochabamba</a><a href="#">Localizar</a></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Tienda Amiga ER · Todos los derechos reservados · Prototipo de diseño</p>
+    <div class="social-row">
+      <div class="socbtn">📘</div>
+      <div class="socbtn">📸</div>
+      <div class="socbtn">▶️</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ COMPARE BAR ══════════════════════════════════════ -->
+<div class="compare-bar" id="compareBar">
+  <span class="cbar-label">⚖️ Comparando</span>
+  <div class="cbar-slots">
+    <div class="cslot" id="cs1"><span class="cslot-emoji">➕</span><span class="cslot-text">Seleccioná un celular</span></div>
+    <div class="cslot" id="cs2"><span class="cslot-emoji">➕</span><span class="cslot-text">Seleccioná otro celular</span></div>
+  </div>
+  <button class="btn-compare-now" id="btnCompareNow" onclick="openCompareModal()" disabled>Comparar ahora</button>
+</div>
+
+<!-- ══ COMPARE MODAL ════════════════════════════════════ -->
+<div class="overlay" id="compareModal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('compareModal').classList.remove('show')">✕</button>
+    <div class="modal-title">⚖️ Comparación de modelos</div>
+    <div class="modal-sub">Samsung Galaxy S24 vs iPhone 15</div>
+    <table class="ctable">
+      <thead><tr><th>Característica</th><th>📱 Samsung S24</th><th>🍎 iPhone 15</th></tr></thead>
+      <tbody>
+        <tr><td>Precio</td><td class="win">Bs. 5.299</td><td>Bs. 8.999</td></tr>
+        <tr><td>Pantalla</td><td>6.2" AMOLED</td><td>6.1" OLED</td></tr>
+        <tr><td>Procesador</td><td>Snapdragon 8 Gen 3</td><td class="win">A16 Bionic</td></tr>
+        <tr><td>RAM</td><td>8 GB</td><td>6 GB</td></tr>
+        <tr><td>Almacenamiento</td><td>128 GB</td><td>128 GB</td></tr>
+        <tr><td>Cámara</td><td>50 MP</td><td class="win">48 MP ProRAW</td></tr>
+        <tr><td>Batería</td><td class="win">4.000 mAh</td><td>3.877 mAh</td></tr>
+        <tr><td>5G</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Cuota mensual</td><td class="win">12x Bs. 441</td><td>12x Bs. 749</td></tr>
+      </tbody>
+    </table>
+    <div class="modal-btns">
+      <button class="btn-cart" onclick="toast('Samsung S24 agregado 🛒');document.getElementById('compareModal').classList.remove('show')">🛒 Agregar Samsung</button>
+      <button class="btn-buynow" onclick="toast('iPhone 15 agregado 🛒');document.getElementById('compareModal').classList.remove('show')">⚡ Comprar iPhone</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHAT FAB ════════════════════════════════════════ -->
+<div class="chat-fab">
+  <div class="chat-bubble show" id="chatBubble">
+    <strong>¿Necesitás ayuda? 👋</strong>
+    Nuestros asesores de celulares están disponibles ahora.
+  </div>
+  <button class="chat-btn" onclick="toggleChat()">
+    💬
+    <div class="chat-badge">1</div>
+  </button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toastEl"></div>
+
+<script>
+// ── TOAST ───────────────────────────────────────
+function toast(msg) {
+  const el = document.getElementById('toastEl');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+// ── BRAND FILTER (C) — syncs with header nav ────
+function selectBrand(chip, brand) {
+  document.querySelectorAll('.bfc').forEach(c => {
+    c.classList.remove('active');
+    c.querySelector('.bfc-label').style.color = '';
+  });
+  chip.classList.add('active');
+  // sync header nav
+  document.querySelectorAll('.bnav-chip').forEach(c => c.classList.remove('active'));
+  const match = [...document.querySelectorAll('.bnav-chip')].find(c => c.textContent.trim() === brand);
+  if (match) match.classList.add('active');
+  toast(`Filtrando: ${brand}`);
+}
+function syncBrand(chip, brand) {
+  document.querySelectorAll('.bnav-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  document.querySelectorAll('.bfc').forEach(c => c.classList.remove('active'));
+  const match = document.getElementById('bfc-' + brand);
+  if (match) match.classList.add('active');
+  toast(`Filtrando: ${brand}`);
+}
+
+// ── COMPARE ─────────────────────────────────────
+let compareList = [];
+function addCompare(btn, name, emoji) {
+  const idx = compareList.findIndex(p => p.name === name);
+  if (idx > -1) {
+    compareList.splice(idx, 1);
+    btn.classList.remove('on');
+  } else {
+    if (compareList.length >= 2) { toast('Máximo 2 productos para comparar'); return; }
+    compareList.push({ name, emoji });
+    btn.classList.add('on');
+  }
+  renderCompareBar();
+}
+function renderCompareBar() {
+  const bar = document.getElementById('compareBar');
+  const btn = document.getElementById('btnCompareNow');
+  bar.classList.toggle('up', compareList.length > 0);
+  ['cs1','cs2'].forEach((id,i) => {
+    const slot = document.getElementById(id);
+    if (compareList[i]) {
+      slot.classList.add('filled');
+      slot.innerHTML = `<span class="cslot-emoji">${compareList[i].emoji}</span><span class="cslot-text"><strong>${compareList[i].name}</strong></span><span class="cslot-x" onclick="removeCompare(${i})">✕</span>`;
+    } else {
+      slot.classList.remove('filled');
+      slot.innerHTML = `<span class="cslot-emoji">➕</span><span class="cslot-text">Seleccioná un celular</span>`;
+    }
+  });
+  btn.disabled = compareList.length < 2;
+}
+function removeCompare(i) {
+  document.querySelectorAll('.btn-compare-ico.on').forEach(b => b.classList.remove('on'));
+  compareList.splice(i, 1);
+  renderCompareBar();
+}
+function openCompareModal() { document.getElementById('compareModal').classList.add('show'); }
+
+// ── CREDIT CHECK ─────────────────────────────────
+function checkCredit() {
+  const v = document.getElementById('ciInput').value;
+  if (v.length < 6) { toast('Ingresá un CI válido (mínimo 6 dígitos)'); return; }
+  toast('Verificando crédito...');
+  setTimeout(() => {
+    document.getElementById('approvedBox').classList.add('show');
+    toast('✅ ¡Crédito aprobado! Bs. 5.000 disponibles');
+  }, 1100);
+}
+
+// ── CHAT ─────────────────────────────────────────
+let chatOpen = true;
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById('chatBubble').classList.toggle('show', chatOpen);
+  if (!chatOpen) toast('Chat de asesoría — Próximamente en producción');
+}
+setTimeout(() => {
+  document.getElementById('chatBubble').classList.remove('show');
+  chatOpen = false;
+}, 5000);
+</script>
+</body>
+</html>

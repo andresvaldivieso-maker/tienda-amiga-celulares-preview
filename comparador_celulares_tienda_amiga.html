@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparador de Celulares · Tienda Amiga</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ─── TOKENS ─── */
+:root {
+  --navy:   #0F1B3D;
+  --navy2:  #1A2C5B;
+  --blue:   #1E3A8A;
+  --yellow: #F5B800;
+  --ylite:  #FFF8DC;
+  --ybdr:   rgba(245,184,0,.25);
+  --white:  #FFFFFF;
+  --g50:    #F6F8FC;
+  --g100:   #EDF0F7;
+  --g200:   #D8DEF0;
+  --g400:   #8892B8;
+  --g600:   #4E5A80;
+  --g900:   #0D1426;
+  --green:  #059669;
+  --glite:  #ECFDF5;
+  --gbdr:   rgba(5,150,105,.25);
+  --red:    #DC2626;
+  --r:      14px;
+  --rlg:    20px;
+  --sh:     0 4px 24px rgba(15,27,61,.10);
+  --shlg:   0 16px 56px rgba(15,27,61,.20);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--g50);
+  color: var(--g900);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── PAGE SHELL ─── */
+.page {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+/* ─── BREADCRUMB ─── */
+.breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--g400); margin-bottom: 36px;
+  font-family: 'DM Mono', monospace;
+}
+.breadcrumb a { color: var(--g400); text-decoration: none; transition: color .15s; }
+.breadcrumb a:hover { color: var(--navy); }
+.breadcrumb span { color: var(--g200); }
+.breadcrumb strong { color: var(--navy); font-weight: 500; }
+
+/* ─── PAGE HEADER ─── */
+.page-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 40px; gap: 20px;
+}
+.header-left {}
+.header-kicker {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--ylite); border: 1px solid var(--ybdr);
+  border-radius: 100px; padding: 5px 13px;
+  font-size: 11px; font-weight: 600; color: #7A5500;
+  letter-spacing: .5px; text-transform: uppercase; margin-bottom: 12px;
+  font-family: 'DM Mono', monospace;
+}
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 42px; font-weight: 800; color: var(--navy);
+  letter-spacing: -2px; line-height: 1.0;
+}
+.page-title em { font-style: normal; color: var(--yellow); }
+.page-sub {
+  font-size: 15px; color: var(--g600); margin-top: 10px;
+  line-height: 1.6; font-weight: 300; max-width: 440px;
+}
+.header-right {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.btn-share {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--white); border: 1px solid var(--g200);
+  border-radius: 100px; padding: 10px 18px;
+  font-size: 13px; font-weight: 600; color: var(--g600); cursor: pointer;
+  transition: all .2s; font-family: 'DM Sans', sans-serif;
+}
+.btn-share:hover { border-color: var(--navy); color: var(--navy); }
+.btn-newcmp {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--navy); border: none; border-radius: 100px;
+  padding: 10px 20px; font-size: 13px; font-weight: 700;
+  color: var(--white); cursor: pointer; transition: all .2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-newcmp:hover { background: var(--blue); transform: translateY(-1px); }
+
+/* ─── SELECTOR ROW ─── */
+.selector-row {
+  display: grid; grid-template-columns: 220px 1fr 1fr 1fr;
+  gap: 0; margin-bottom: 0;
+  background: var(--white); border: 1px solid var(--g200);
+  border-radius: var(--rlg) var(--rlg) 0 0; overflow: hidden;
+  box-shadow: var(--sh);
+}
+.sel-label-cell {
+  background: var(--navy); padding: 24px 22px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.sel-label-cell .sl-text {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700; color: rgba(255,255,255,.35);
+  letter-spacing: 2px; text-transform: uppercase;
+}
+.sel-label-cell .sl-count {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px; font-weight: 800; color: var(--yellow);
+  line-height: 1; margin-top: 4px;
+}
+.sel-label-cell .sl-unit {
+  font-size: 12px; color: rgba(255,255,255,.4);
+  font-family: 'DM Mono', monospace; margin-top: 2px;
+}
+
+.slot-cell {
+  padding: 20px 18px;
+  border-left: 1px solid var(--g100);
+  display: flex; flex-direction: column; gap: 10px;
+  position: relative; transition: background .2s;
+}
+.slot-cell:hover { background: var(--g50); }
+.slot-cell.has-product { background: var(--white); }
+
+/* empty slot */
+.slot-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border: 2px dashed var(--g200); border-radius: 12px;
+  padding: 18px 12px; cursor: pointer; gap: 6px;
+  transition: all .2s; min-height: 90px;
+}
+.slot-empty:hover { border-color: var(--navy); background: var(--g50); }
+.slot-empty-ico { font-size: 24px; opacity: .35; }
+.slot-empty-txt { font-size: 11px; font-weight: 600; color: var(--g400); text-align: center; letter-spacing: .3px; }
+
+/* filled slot */
+.slot-product { display: flex; flex-direction: column; gap: 8px; }
+.slot-prod-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.slot-emoji-wrap {
+  width: 48px; height: 48px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; flex-shrink: 0;
+}
+.slot-remove {
+  width: 22px; height: 22px; border-radius: 50%; background: var(--g100);
+  border: none; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; cursor: pointer; color: var(--g400); transition: all .15s;
+  flex-shrink: 0;
+}
+.slot-remove:hover { background: var(--red); color: var(--white); }
+.slot-brand { font-size: 10px; font-weight: 700; color: var(--g400); letter-spacing: 1.5px; text-transform: uppercase; font-family: 'DM Mono', monospace; }
+.slot-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--navy); line-height: 1.25; }
+.slot-price { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--navy); letter-spacing: -.5px; }
+.slot-quota { font-size: 11px; color: var(--green); font-weight: 600; }
+.slot-ctas { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.slot-btn-cart {
+  background: var(--navy); color: var(--white); border: none;
+  border-radius: 8px; padding: 8px 6px; font-size: 11px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;
+  transition: background .15s; font-family: 'DM Sans', sans-serif;
+}
+.slot-btn-cart:hover { background: var(--blue); }
+.slot-btn-buy {
+  background: var(--yellow); color: var(--navy); border: none;
+  border-radius: 8px; padding: 8px 6px; font-size: 11px; font-weight: 800;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;
+  transition: all .15s; font-family: 'DM Sans', sans-serif;
+}
+.slot-btn-buy:hover { background: #ffc820; }
+
+/* ─── COMPARISON TABLE ─── */
+.compare-table {
+  background: var(--white);
+  border: 1px solid var(--g200); border-top: none;
+  border-radius: 0 0 var(--rlg) var(--rlg);
+  overflow: hidden; box-shadow: var(--sh);
+  margin-bottom: 32px;
+}
+
+/* section headers */
+.section-header-row {
+  display: grid; grid-template-columns: 220px 1fr 1fr 1fr;
+  background: var(--navy); padding: 0;
+}
+.sh-label {
+  padding: 11px 22px;
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700; color: rgba(255,255,255,.4);
+  letter-spacing: 2px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.sh-label .sh-ico { font-size: 14px; opacity: .6; }
+.sh-prod { padding: 11px 18px; border-left: 1px solid rgba(255,255,255,.06); }
+
+/* data rows */
+.data-row {
+  display: grid; grid-template-columns: 220px 1fr 1fr 1fr;
+  border-top: 1px solid var(--g100);
+  transition: background .15s;
+}
+.data-row:hover { background: var(--g50); }
+.data-row.alt { background: #FAFBFF; }
+.data-row.alt:hover { background: #F0F2FA; }
+
+.row-label {
+  padding: 14px 22px;
+  display: flex; align-items: center; gap: 8px;
+  border-right: 1px solid var(--g100);
+}
+.rl-text {
+  font-size: 12px; font-weight: 600; color: var(--g600);
+  font-family: 'DM Sans', sans-serif;
+}
+.rl-icon { font-size: 15px; flex-shrink: 0; }
+
+.data-cell {
+  padding: 14px 18px;
+  display: flex; align-items: center;
+  border-left: 1px solid var(--g100);
+  font-size: 13px; color: var(--g900);
+  font-family: 'DM Sans', sans-serif;
+  position: relative;
+}
+
+/* winner states */
+.data-cell.winner {
+  background: linear-gradient(90deg, rgba(5,150,105,.04) 0%, transparent 100%);
+}
+.data-cell.winner .cell-val { color: var(--green); font-weight: 700; }
+.win-badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: var(--glite); border: 1px solid var(--gbdr);
+  border-radius: 100px; padding: 2px 7px;
+  font-size: 9px; font-weight: 700; color: var(--green);
+  margin-left: 6px; letter-spacing: .3px; text-transform: uppercase;
+  font-family: 'DM Mono', monospace; flex-shrink: 0;
+}
+
+/* price row special */
+.data-row.price-row { border-top: 2px solid var(--g100); }
+.data-row.price-row .data-cell { padding: 18px 18px; }
+.price-main { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--navy); letter-spacing: -.5px; }
+.price-old  { font-size: 12px; color: var(--g400); text-decoration: line-through; display: block; margin-bottom: 2px; }
+.price-quota { font-size: 11px; color: var(--green); font-weight: 600; font-family: 'DM Mono', monospace; display: block; margin-top: 3px; }
+
+/* tag pills inside cells */
+.cell-pill {
+  display: inline-flex; align-items: center;
+  font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 5px;
+  font-family: 'DM Mono', monospace;
+}
+.pill-blue { background: #EEF2FF; color: var(--blue); }
+.pill-green { background: var(--glite); color: var(--green); }
+.pill-gray { background: var(--g100); color: var(--g600); }
+
+/* check / cross */
+.check { color: var(--green); font-size: 16px; }
+.cross { color: var(--g300); font-size: 16px; color: var(--g400); }
+
+/* score bar */
+.score-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.score-bar { flex: 1; height: 5px; background: var(--g100); border-radius: 3px; overflow: hidden; }
+.score-fill { height: 5px; border-radius: 3px; transition: width 1s ease; }
+.score-val { font-size: 11px; font-weight: 700; font-family: 'DM Mono', monospace; color: var(--g600); min-width: 30px; }
+
+/* ─── VERDICT CARD ─── */
+.verdict-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 14px; margin-bottom: 32px;
+}
+.verdict-card {
+  background: var(--white); border: 1px solid var(--g200);
+  border-radius: var(--rlg); padding: 22px 20px;
+  box-shadow: var(--sh); position: relative; overflow: hidden;
+  transition: all .25s;
+}
+.verdict-card:hover { transform: translateY(-3px); box-shadow: var(--shlg); }
+.verdict-card.highlighted {
+  border-color: var(--yellow); background: linear-gradient(135deg, #FFFBEC, var(--white));
+}
+.verdict-card.highlighted::before {
+  content: '⭐ MEJOR ELECCIÓN';
+  position: absolute; top: 0; right: 0;
+  background: var(--yellow); color: var(--navy);
+  font-size: 9px; font-weight: 800; padding: 4px 10px;
+  border-radius: 0 var(--rlg) 0 10px;
+  letter-spacing: .5px; font-family: 'DM Mono', monospace;
+}
+.verdict-ico { font-size: 32px; margin-bottom: 12px; display: block; }
+.verdict-label {
+  font-size: 10px; font-weight: 700; color: var(--g400);
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 6px; font-family: 'DM Mono', monospace;
+}
+.verdict-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 4px;
+}
+.verdict-desc { font-size: 12px; color: var(--g600); line-height: 1.6; }
+
+/* ─── SCORE SUMMARY ─── */
+.score-summary {
+  background: var(--navy);
+  border-radius: var(--rlg); padding: 28px 32px;
+  margin-bottom: 32px;
+  display: grid; grid-template-columns: 180px 1fr 1fr 1fr;
+  gap: 0; align-items: start;
+}
+.ss-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px; font-weight: 700; color: rgba(255,255,255,.35);
+  padding-right: 20px; padding-top: 4px;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.ss-label span { display: block; font-size: 22px; font-weight: 800; color: var(--yellow); margin-top: 6px; letter-spacing: -1px; }
+.ss-col {
+  padding: 0 24px;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.ss-col:last-child { border-right: none; }
+.ss-prod-name { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: rgba(255,255,255,.5); margin-bottom: 8px; letter-spacing: -.2px; }
+.ss-big-score {
+  font-family: 'Syne', sans-serif;
+  font-size: 48px; font-weight: 800; letter-spacing: -3px; line-height: 1;
+}
+.ss-big-score.s1 { color: var(--yellow); }
+.ss-big-score.s2 { color: rgba(255,255,255,.55); }
+.ss-big-score.s3 { color: rgba(255,255,255,.35); }
+.ss-out-of { font-size: 14px; color: rgba(255,255,255,.25); font-family: 'DM Mono', monospace; }
+.ss-categories { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+.ss-cat-row { display: flex; align-items: center; gap: 8px; }
+.ss-cat-label { font-size: 10px; color: rgba(255,255,255,.35); width: 68px; flex-shrink: 0; font-family: 'DM Mono', monospace; }
+.ss-cat-bar { flex: 1; height: 3px; background: rgba(255,255,255,.08); border-radius: 2px; overflow: hidden; }
+.ss-cat-fill { height: 3px; border-radius: 2px; }
+.ss-cat-val { font-size: 10px; color: rgba(255,255,255,.3); font-family: 'DM Mono', monospace; min-width: 22px; text-align: right; }
+
+/* ─── CTA ROW ─── */
+.cta-row {
+  display: grid; grid-template-columns: 220px 1fr 1fr 1fr;
+  background: var(--white); border: 1px solid var(--g200);
+  border-radius: var(--rlg); overflow: hidden; box-shadow: var(--sh);
+}
+.cta-label-cell {
+  background: var(--g50); padding: 22px;
+  display: flex; flex-direction: column; justify-content: center;
+  border-right: 1px solid var(--g200);
+}
+.cta-label { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.cta-sublabel { font-size: 11px; color: var(--g400); font-family: 'DM Sans', sans-serif; }
+.cta-cell {
+  padding: 20px 18px; border-left: 1px solid var(--g100);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.btn-view {
+  background: var(--g50); border: 1px solid var(--g200); border-radius: 9px;
+  padding: 10px; font-size: 12px; font-weight: 600; color: var(--g600);
+  cursor: pointer; transition: all .2s; text-align: center;
+  font-family: 'DM Sans', sans-serif; width: 100%;
+}
+.btn-view:hover { border-color: var(--navy); color: var(--navy); background: var(--white); }
+.btn-add-cart {
+  background: var(--navy); border: none; border-radius: 9px;
+  padding: 11px; font-size: 12px; font-weight: 700; color: var(--white);
+  cursor: pointer; transition: background .2s; text-align: center;
+  font-family: 'DM Sans', sans-serif; width: 100%;
+}
+.btn-add-cart:hover { background: var(--blue); }
+.btn-buy-now {
+  background: var(--yellow); border: none; border-radius: 9px;
+  padding: 11px; font-size: 12px; font-weight: 800; color: var(--navy);
+  cursor: pointer; transition: all .2s; text-align: center;
+  font-family: 'DM Sans', sans-serif; width: 100%;
+}
+.btn-buy-now:hover { background: #ffc820; transform: scale(1.02); }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed; bottom: 28px; right: 28px; z-index: 999;
+  background: var(--navy); color: var(--white);
+  border-radius: 10px; padding: 12px 20px;
+  font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif;
+  border-left: 4px solid var(--yellow); box-shadow: var(--shlg);
+  transform: translateY(10px); opacity: 0;
+  transition: all .28s ease; pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* ─── ANIMATIONS ─── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.slot-cell { animation: slideUp .4s ease both; }
+.slot-cell:nth-child(2) { animation-delay: .06s; }
+.slot-cell:nth-child(3) { animation-delay: .12s; }
+.slot-cell:nth-child(4) { animation-delay: .18s; }
+
+.data-row { animation: slideUp .35s ease both; }
+
+/* stagger each data row */
+.data-row:nth-child(1)  { animation-delay: .10s; }
+.data-row:nth-child(2)  { animation-delay: .13s; }
+.data-row:nth-child(3)  { animation-delay: .16s; }
+.data-row:nth-child(4)  { animation-delay: .19s; }
+.data-row:nth-child(5)  { animation-delay: .22s; }
+.data-row:nth-child(6)  { animation-delay: .25s; }
+.data-row:nth-child(7)  { animation-delay: .28s; }
+.data-row:nth-child(8)  { animation-delay: .31s; }
+.data-row:nth-child(9)  { animation-delay: .34s; }
+.data-row:nth-child(10) { animation-delay: .37s; }
+.data-row:nth-child(11) { animation-delay: .40s; }
+.data-row:nth-child(12) { animation-delay: .43s; }
+.data-row:nth-child(13) { animation-delay: .46s; }
+.data-row:nth-child(14) { animation-delay: .49s; }
+
+.verdict-card { animation: slideUp .4s ease both; }
+.verdict-card:nth-child(1) { animation-delay: .55s; }
+.verdict-card:nth-child(2) { animation-delay: .62s; }
+.verdict-card:nth-child(3) { animation-delay: .69s; }
+
+/* score bars animate in */
+.score-fill { width: 0; }
+.score-fill.loaded { transition: width 1.2s cubic-bezier(.16,1,.3,1); }
+
+/* ─── RESPONSIVE nudge for comparison overflow ─── */
+.compare-table, .selector-row, .cta-row, .score-summary {
+  min-width: 700px;
+}
+.scroll-hint { overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="#">Tienda Amiga</a>
+    <span>/</span>
+    <a href="#">Celulares</a>
+    <span>/</span>
+    <strong>Comparar modelos</strong>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="header-kicker">⚖️ Herramienta de comparación</div>
+      <h1 class="page-title">Compará y<br>elegí el <em>mejor</em></h1>
+      <p class="page-sub">Comparación técnica detallada con análisis de valor. Hasta 3 modelos en paralelo.</p>
+    </div>
+    <div class="header-right">
+      <button class="btn-share" onclick="t('Enlace copiado 🔗')">🔗 Compartir</button>
+      <button class="btn-newcmp" onclick="t('Nueva comparación →')">+ Nueva comparación</button>
+    </div>
+  </div>
+
+  <!-- ── SCORE SUMMARY ────────────────────────────── -->
+  <div class="score-summary">
+    <div class="ss-label">Puntuación<br>general<span>↓</span></div>
+    <div class="ss-col">
+      <div class="ss-prod-name">Samsung Galaxy S24</div>
+      <div class="ss-big-score s1">8.4<span class="ss-out-of">/10</span></div>
+      <div class="ss-categories">
+        <div class="ss-cat-row"><div class="ss-cat-label">Rendim.</div><div class="ss-cat-bar"><div class="ss-cat-fill score-fill" style="background:var(--yellow);" data-w="88%"></div></div><div class="ss-cat-val">8.8</div></div>
+        <div class="ss-cat-row"><div class="ss-cat-label">Cámara</div><div class="ss-cat-bar"><div class="ss-cat-fill score-fill" style="background:var(--yellow);" data-w="85%"></div></div><div class="ss-cat-val">8.5</div></div>
+        <div class="ss-cat-row"><div class="ss-cat-label">Batería</div><div class="ss-cat-bar"><div class="ss-cat-fill score-fill" style="background:var(--yellow);" data-w="82%"></div></div><div class="ss-cat-val">8.2</div></div>
+        <div class="ss-cat-row"><div class="ss-cat-label">Precio</div><div class="ss-cat-bar"><div class="ss-cat-fill score-fill" style="background:var(--yellow);" data-w="80%"></div></div><div class="ss-cat-val">8.0</div></div>
+      </div>
+    </div>
+    <div class="ss-col">
+      <div class="ss-prod-name">Apple iPhone 15</div>
+      <div class="ss-big-score s2">7.9<span class="ss-out-of">/10</span></div>
+      <div class="ss-categories">
+        <div class="ss-cat-row"><div class="ss-cat-label">Rendim.</div><div class="ss-cat-bar"><div class="ss-cat-fill score-fill" style="background:rgba(255,255,255,.35);" data-w="96%"></div></div><div class="ss-cat-val">9.6</div></div>
+        <div class="ss-cat-row"><div class="ss-cat-label">Cámara</div><div class="ss-cat-bar"><div class="ss-cat-fill score-fill" style="background:rgba(255,255,255,.35);" data-w="90%"></div></div><div class="ss-cat-val">9.0</div></div>
+        <div class="ss-cat-row"><div class="ss-cat-label">Batería</div><div class="ss-cat-bar"><div class="ss-cat-fill score-fill" style="background:rgba(255,255,255,.35);" data-w="72%"></div></div><div class="ss-cat-val">7.2</div></div>
+        <div class="ss-cat-row"><div class="ss-cat-label">Precio</div><div class="ss-cat-bar"><div class="ss-cat-fill score-fill" style="background:rgba(255,255,255,.35);" data-w="55%"></div></div><div class="ss-cat-val">5.5</div></div>
+      </div>
+    </div>
+    <div class="ss-col">
+      <div class="ss-prod-name">Xiaomi Redmi Note 13</div>
+      <div class="ss-big-score s3">7.1<span class="ss-out-of">/10</span></div>
+      <div class="ss-categories">
+        <div class="ss-cat-row"><div class="ss-cat-label">Rendim.</div><div class="ss-cat-bar"><div class="ss-cat-fill score-fill" style="background:rgba(255,255,255,.2);" data-w="72%"></div></div><div class="ss-cat-val">7.2</div></div>
+        <div class="ss-cat-row"><div class="ss-cat-label">Cámara</div><div class="ss-cat-bar"><div class="ss-cat-fill score-fill" style="background:rgba(255,255,255,.2);" data-w="75%"></div></div><div class="ss-cat-val">7.5</div></div>
+        <div class="ss-cat-row"><div class="ss-cat-label">Batería</div><div class="ss-cat-bar"><div class="ss-cat-fill score-fill" style="background:rgba(255,255,255,.2);" data-w="80%"></div></div><div class="ss-cat-val">8.0</div></div>
+        <div class="ss-cat-row"><div class="ss-cat-label">Precio</div><div class="ss-cat-bar"><div class="ss-cat-fill score-fill" style="background:rgba(255,255,255,.2);" data-w="92%"></div></div><div class="ss-cat-val">9.2</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SELECTOR ROW ──────────────────────────────── -->
+  <div class="scroll-hint">
+  <div class="selector-row">
+    <div class="sel-label-cell">
+      <div class="sl-text">comparando</div>
+      <div class="sl-count">03</div>
+      <div class="sl-unit">modelos</div>
+    </div>
+
+    <!-- SLOT 1 — Samsung -->
+    <div class="slot-cell has-product">
+      <div class="slot-product">
+        <div class="slot-prod-header">
+          <div class="slot-emoji-wrap" style="background:linear-gradient(135deg,#E8EAFF,#CDD0EF);">📱</div>
+          <button class="slot-remove" onclick="t('Samsung S24 removido')">✕</button>
+        </div>
+        <div class="slot-brand">Samsung</div>
+        <div class="slot-name">Galaxy S24 128GB</div>
+        <div class="slot-price">Bs. 5.299</div>
+        <div class="slot-quota">12x Bs. 441/mes · Sin interés</div>
+        <div class="slot-ctas">
+          <button class="slot-btn-cart" onclick="t('Samsung S24 al carrito 🛒')">🛒 Carrito</button>
+          <button class="slot-btn-buy"  onclick="t('Comprando Samsung ⚡')">⚡ Comprar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLOT 2 — iPhone -->
+    <div class="slot-cell has-product">
+      <div class="slot-product">
+        <div class="slot-prod-header">
+          <div class="slot-emoji-wrap" style="background:linear-gradient(135deg,#F5F5F5,#E0E0E0);">🍎</div>
+          <button class="slot-remove" onclick="t('iPhone 15 removido')">✕</button>
+        </div>
+        <div class="slot-brand">Apple</div>
+        <div class="slot-name">iPhone 15 128GB</div>
+        <div class="slot-price">Bs. 8.999</div>
+        <div class="slot-quota">12x Bs. 749/mes · Sin interés</div>
+        <div class="slot-ctas">
+          <button class="slot-btn-cart" onclick="t('iPhone 15 al carrito 🛒')">🛒 Carrito</button>
+          <button class="slot-btn-buy"  onclick="t('Comprando iPhone ⚡')">⚡ Comprar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLOT 3 — Xiaomi -->
+    <div class="slot-cell has-product">
+      <div class="slot-product">
+        <div class="slot-prod-header">
+          <div class="slot-emoji-wrap" style="background:linear-gradient(135deg,#FFF3E0,#FFD9B0);">📲</div>
+          <button class="slot-remove" onclick="t('Redmi Note 13 removido')">✕</button>
+        </div>
+        <div class="slot-brand">Xiaomi</div>
+        <div class="slot-name">Redmi Note 13 Pro 256GB</div>
+        <div class="slot-price">Bs. 2.499</div>
+        <div class="slot-quota">12x Bs. 208/mes · Sin interés</div>
+        <div class="slot-ctas">
+          <button class="slot-btn-cart" onclick="t('Redmi Note 13 al carrito 🛒')">🛒 Carrito</button>
+          <button class="slot-btn-buy"  onclick="t('Comprando Xiaomi ⚡')">⚡ Comprar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COMPARISON TABLE ──────────────────────────── -->
+  <div class="compare-table">
+
+    <!-- SECTION: PRECIO -->
+    <div class="section-header-row">
+      <div class="sh-label"><span class="sh-ico">💰</span> Precio y financiación</div>
+      <div class="sh-prod"></div><div class="sh-prod"></div><div class="sh-prod"></div>
+    </div>
+
+    <div class="data-row price-row alt">
+      <div class="row-label"><span class="rl-icon">🏷️</span><span class="rl-text">Precio de venta</span></div>
+      <div class="data-cell winner">
+        <div><span class="price-main">Bs. 5.299</span><span class="price-old">Bs. 5.999</span><span class="price-quota">12x Bs. 441/mes</span></div>
+      </div>
+      <div class="data-cell">
+        <div><span class="price-main">Bs. 8.999</span><span class="price-quota">12x Bs. 749/mes</span></div>
+      </div>
+      <div class="data-cell">
+        <div><span class="price-main">Bs. 2.499</span><span class="price-old">Bs. 3.199</span><span class="price-quota">12x Bs. 208/mes</span></div>
+        <span class="win-badge">💰 Más barato</span>
+      </div>
+    </div>
+
+    <!-- SECTION: PANTALLA -->
+    <div class="section-header-row">
+      <div class="sh-label"><span class="sh-ico">📺</span> Pantalla</div>
+      <div class="sh-prod"></div><div class="sh-prod"></div><div class="sh-prod"></div>
+    </div>
+
+    <div class="data-row">
+      <div class="row-label"><span class="rl-icon">📐</span><span class="rl-text">Tamaño</span></div>
+      <div class="data-cell winner"><span class="cell-val">6.2"</span><span class="win-badge">+ grande</span></div>
+      <div class="data-cell"><span class="cell-val">6.1"</span></div>
+      <div class="data-cell winner"><span class="cell-val">6.67"</span><span class="win-badge">+ grande</span></div>
+    </div>
+
+    <div class="data-row alt">
+      <div class="row-label"><span class="rl-icon">✨</span><span class="rl-text">Tecnología</span></div>
+      <div class="data-cell winner"><span class="cell-pill pill-blue">Dynamic AMOLED</span><span class="win-badge">mejor</span></div>
+      <div class="data-cell"><span class="cell-pill pill-blue">Super Retina OLED</span></div>
+      <div class="data-cell"><span class="cell-pill pill-blue">AMOLED</span></div>
+    </div>
+
+    <div class="data-row">
+      <div class="row-label"><span class="rl-icon">⚡</span><span class="rl-text">Tasa de refresco</span></div>
+      <div class="data-cell winner"><span class="cell-val">120 Hz</span><span class="win-badge">más fluido</span></div>
+      <div class="data-cell"><span class="cell-val">60 Hz</span></div>
+      <div class="data-cell winner"><span class="cell-val">120 Hz</span><span class="win-badge">más fluido</span></div>
+    </div>
+
+    <!-- SECTION: RENDIMIENTO -->
+    <div class="section-header-row">
+      <div class="sh-label"><span class="sh-ico">⚙️</span> Procesador y rendimiento</div>
+      <div class="sh-prod"></div><div class="sh-prod"></div><div class="sh-prod"></div>
+    </div>
+
+    <div class="data-row alt">
+      <div class="row-label"><span class="rl-icon">🧠</span><span class="rl-text">Procesador</span></div>
+      <div class="data-cell"><span class="cell-val">Snapdragon 8 Gen 3</span></div>
+      <div class="data-cell winner"><span class="cell-val">A16 Bionic</span><span class="win-badge">más rápido</span></div>
+      <div class="data-cell"><span class="cell-val">Snapdragon 7s Gen 2</span></div>
+    </div>
+
+    <div class="data-row">
+      <div class="row-label"><span class="rl-icon">💾</span><span class="rl-text">RAM</span></div>
+      <div class="data-cell winner"><span class="cell-val">8 GB</span><span class="win-badge">más RAM</span></div>
+      <div class="data-cell"><span class="cell-val">6 GB</span></div>
+      <div class="data-cell winner"><span class="cell-val">12 GB</span><span class="win-badge">+ RAM</span></div>
+    </div>
+
+    <div class="data-row alt">
+      <div class="row-label"><span class="rl-icon">💿</span><span class="rl-text">Almacenamiento</span></div>
+      <div class="data-cell"><span class="cell-val">128 GB</span></div>
+      <div class="data-cell"><span class="cell-val">128 GB</span></div>
+      <div class="data-cell winner"><span class="cell-val">256 GB</span><span class="win-badge">+ espacio</span></div>
+    </div>
+
+    <!-- Score bar row -->
+    <div class="data-row">
+      <div class="row-label"><span class="rl-icon">📊</span><span class="rl-text">Benchmark</span></div>
+      <div class="data-cell" style="flex-direction:column;align-items:stretch;gap:4px;">
+        <div class="score-bar-wrap">
+          <div class="score-bar"><div class="score-fill" style="background:var(--yellow);" data-w="88%"></div></div>
+          <span class="score-val">880k</span>
+        </div>
+      </div>
+      <div class="data-cell winner" style="flex-direction:column;align-items:stretch;gap:4px;">
+        <div class="score-bar-wrap">
+          <div class="score-bar"><div class="score-fill" style="background:var(--green);" data-w="100%"></div></div>
+          <span class="score-val" style="color:var(--green);">1.2M</span>
+        </div>
+        <span class="win-badge" style="width:fit-content;">+ potente</span>
+      </div>
+      <div class="data-cell" style="flex-direction:column;align-items:stretch;gap:4px;">
+        <div class="score-bar-wrap">
+          <div class="score-bar"><div class="score-fill" style="background:var(--g400);" data-w="56%"></div></div>
+          <span class="score-val">560k</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: CÁMARA -->
+    <div class="section-header-row">
+      <div class="sh-label"><span class="sh-ico">📷</span> Cámaras</div>
+      <div class="sh-prod"></div><div class="sh-prod"></div><div class="sh-prod"></div>
+    </div>
+
+    <div class="data-row alt">
+      <div class="row-label"><span class="rl-icon">📸</span><span class="rl-text">Cámara principal</span></div>
+      <div class="data-cell"><span class="cell-val">50 MP f/1.8</span></div>
+      <div class="data-cell winner"><span class="cell-val">48 MP ProRAW</span><span class="win-badge">mejor foto</span></div>
+      <div class="data-cell winner"><span class="cell-val">200 MP f/1.7</span><span class="win-badge">+ megapíxeles</span></div>
+    </div>
+
+    <div class="data-row">
+      <div class="row-label"><span class="rl-icon">🤳</span><span class="rl-text">Cámara frontal</span></div>
+      <div class="data-cell"><span class="cell-val">12 MP</span></div>
+      <div class="data-cell"><span class="cell-val">12 MP TrueDepth</span></div>
+      <div class="data-cell winner"><span class="cell-val">16 MP</span><span class="win-badge">+ MP</span></div>
+    </div>
+
+    <!-- SECTION: BATERÍA -->
+    <div class="section-header-row">
+      <div class="sh-label"><span class="sh-ico">🔋</span> Batería y carga</div>
+      <div class="sh-prod"></div><div class="sh-prod"></div><div class="sh-prod"></div>
+    </div>
+
+    <div class="data-row alt">
+      <div class="row-label"><span class="rl-icon">⚡</span><span class="rl-text">Capacidad</span></div>
+      <div class="data-cell winner"><span class="cell-val">4.000 mAh</span><span class="win-badge">+ batería</span></div>
+      <div class="data-cell"><span class="cell-val">3.877 mAh</span></div>
+      <div class="data-cell winner"><span class="cell-val">5.100 mAh</span><span class="win-badge">mayor</span></div>
+    </div>
+
+    <div class="data-row">
+      <div class="row-label"><span class="rl-icon">🔌</span><span class="rl-text">Carga rápida</span></div>
+      <div class="data-cell winner"><span class="cell-val">25W</span><span class="win-badge">incluido</span></div>
+      <div class="data-cell"><span class="cell-val">20W</span></div>
+      <div class="data-cell winner"><span class="cell-val">67W</span><span class="win-badge">más rápido</span></div>
+    </div>
+
+    <!-- SECTION: CONECTIVIDAD -->
+    <div class="section-header-row">
+      <div class="sh-label"><span class="sh-ico">📡</span> Conectividad</div>
+      <div class="sh-prod"></div><div class="sh-prod"></div><div class="sh-prod"></div>
+    </div>
+
+    <div class="data-row alt">
+      <div class="row-label"><span class="rl-icon">📶</span><span class="rl-text">5G</span></div>
+      <div class="data-cell"><span class="check">✓</span></div>
+      <div class="data-cell"><span class="check">✓</span></div>
+      <div class="data-cell"><span class="check">✓</span></div>
+    </div>
+
+    <div class="data-row">
+      <div class="row-label"><span class="rl-icon">💧</span><span class="rl-text">Resistencia al agua</span></div>
+      <div class="data-cell"><span class="cell-pill pill-blue">IP68</span></div>
+      <div class="data-cell winner"><span class="cell-pill pill-blue">IP68</span><span class="win-badge">certificado</span></div>
+      <div class="data-cell"><span class="cell-pill pill-gray">IP54</span></div>
+    </div>
+
+    <div class="data-row alt">
+      <div class="row-label"><span class="rl-icon">🔊</span><span class="rl-text">Altavoces estéreo</span></div>
+      <div class="data-cell"><span class="check">✓</span></div>
+      <div class="data-cell winner"><span class="check">✓</span><span class="win-badge">Spatial Audio</span></div>
+      <div class="data-cell"><span class="check">✓</span></div>
+    </div>
+
+  </div><!-- end compare-table -->
+  </div><!-- end scroll-hint -->
+
+  <!-- ── VERDICT CARDS ──────────────────────────────── -->
+  <div class="verdict-grid">
+    <div class="verdict-card highlighted">
+      <span class="verdict-ico">📱</span>
+      <div class="verdict-label">Mejor relación precio/valor</div>
+      <div class="verdict-title">Samsung Galaxy S24</div>
+      <div class="verdict-desc">Rendimiento flagship, pantalla superior de 120 Hz y ecosistema Android maduro. La mejor opción para la mayoría de los usuarios bolivianos.</div>
+    </div>
+    <div class="verdict-card">
+      <span class="verdict-ico">🍎</span>
+      <div class="verdict-label">Mejor rendimiento puro</div>
+      <div class="verdict-title">Apple iPhone 15</div>
+      <div class="verdict-desc">El chip A16 Bionic es imbatible en velocidad y la cámara con ProRAW produce resultados excepcionales. Ideal si ya usás productos Apple.</div>
+    </div>
+    <div class="verdict-card">
+      <span class="verdict-ico">📲</span>
+      <div class="verdict-label">Mejor presupuesto</div>
+      <div class="verdict-title">Xiaomi Redmi Note 13</div>
+      <div class="verdict-desc">Con 200 MP y 5.100 mAh de batería a un precio inigualable, es la sorpresa del grupo. Perfecta para quienes priorizan autonomía y cámara.</div>
+    </div>
+  </div>
+
+  <!-- ── CTA ROW ─────────────────────────────────────── -->
+  <div class="scroll-hint">
+  <div class="cta-row">
+    <div class="cta-label-cell">
+      <div class="cta-label">¿Te decidiste?</div>
+      <div class="cta-sublabel">Comprá ahora con<br>cuotas sin interés</div>
+    </div>
+    <div class="cta-cell">
+      <button class="btn-view"       onclick="t('Ficha Samsung S24 →')">👁️ Ver ficha completa</button>
+      <button class="btn-add-cart"   onclick="t('Samsung S24 al carrito 🛒')">🛒 Agregar al carrito</button>
+      <button class="btn-buy-now"    onclick="t('Comprando Samsung ⚡')">⚡ Comprar ahora</button>
+    </div>
+    <div class="cta-cell">
+      <button class="btn-view"       onclick="t('Ficha iPhone 15 →')">👁️ Ver ficha completa</button>
+      <button class="btn-add-cart"   onclick="t('iPhone 15 al carrito 🛒')">🛒 Agregar al carrito</button>
+      <button class="btn-buy-now"    onclick="t('Comprando iPhone ⚡')">⚡ Comprar ahora</button>
+    </div>
+    <div class="cta-cell">
+      <button class="btn-view"       onclick="t('Ficha Redmi Note 13 →')">👁️ Ver ficha completa</button>
+      <button class="btn-add-cart"   onclick="t('Redmi Note 13 al carrito 🛒')">🛒 Agregar al carrito</button>
+      <button class="btn-buy-now"    onclick="t('Comprando Xiaomi ⚡')">⚡ Comprar ahora</button>
+    </div>
+  </div>
+  </div>
+
+</div><!-- end page -->
+
+<!-- TOAST -->
+<div class="toast" id="toastEl"></div>
+
+<script>
+function t(msg) {
+  const el = document.getElementById('toastEl');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// Animate score bars after page load
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.score-fill').forEach(bar => {
+      bar.classList.add('loaded');
+      bar.style.width = bar.dataset.w;
+    });
+  }, 400);
+});
+</script>
+</body>
+</html>
