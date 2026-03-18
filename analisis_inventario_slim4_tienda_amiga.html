@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tienda Amiga ER — Análisis de Inventario y Plan de Parametrización Slim4</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0F1B3D;
+  --navy-90: #1A2A54;
+  --navy-80: #253A6B;
+  --navy-70: #304A82;
+  --navy-60: #4A6499;
+  --navy-40: #7E94BD;
+  --navy-20: #B2C0DB;
+  --navy-10: #D8E0EE;
+  --navy-05: #ECF0F7;
+  --navy-02: #F5F7FB;
+  --yellow: #F5B800;
+  --yellow-light: #FFF3CC;
+  --yellow-dark: #C49300;
+  --red: #E24B4A;
+  --red-light: #FCEBEB;
+  --red-dark: #A32D2D;
+  --green: #1D9E75;
+  --green-light: #E1F5EE;
+  --green-dark: #0F6E56;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --teal: #0F6E56;
+  --teal-light: #E1F5EE;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --text: #1A1A1A;
+  --text-secondary: #555;
+  --text-muted: #888;
+  --bg: #FAFAF8;
+  --card-bg: #FFFFFF;
+  --border: #E8E6E1;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* HEADER */
+.hero {
+  background: var(--navy);
+  color: white;
+  padding: 3rem 2rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(245,184,0,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 1rem;
+}
+.hero h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 600;
+  line-height: 1.25;
+  max-width: 680px;
+  margin-bottom: 0.75rem;
+}
+.hero-sub {
+  font-size: 0.95rem;
+  color: var(--navy-20);
+  max-width: 580px;
+}
+.hero-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+  color: var(--navy-40);
+  font-family: 'DM Mono', monospace;
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+/* CONTAINER */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* SECTION */
+.section {
+  margin-bottom: 3rem;
+}
+.section-number {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 3rem;
+  color: var(--navy-10);
+  line-height: 1;
+  margin-bottom: -0.25rem;
+}
+.section h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 0.5rem;
+}
+.section h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--navy-80);
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+.section p {
+  margin-bottom: 1rem;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+}
+
+/* DIAGNOSTIC BOX */
+.diagnostic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 1.25rem 0 1.5rem;
+}
+.diag-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  border-left: 3px solid var(--red);
+  transition: transform 0.15s;
+}
+.diag-card:hover { transform: translateY(-2px); }
+.diag-card .icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.diag-card h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.diag-card p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* FLOW DIAGRAM */
+.flow-wrapper {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+.flow-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--navy-60);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+}
+.flow-horizontal {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 700px;
+}
+.flow-step {
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+}
+.flow-step-box {
+  background: var(--navy-05);
+  border: 1px solid var(--navy-10);
+  border-radius: 8px;
+  padding: 0.75rem 0.5rem;
+  position: relative;
+}
+.flow-step-box.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: white;
+}
+.flow-step-box.active .flow-step-label { color: rgba(255,255,255,0.7); }
+.flow-step-box.active .flow-step-name { color: white; }
+.flow-step-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--navy-40);
+  margin-bottom: 4px;
+}
+.flow-step-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+.flow-step-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  padding-top: 1.2rem;
+  color: var(--navy-20);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* MATRIX TABLE */
+.matrix-wrapper {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+table.matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  min-width: 600px;
+}
+table.matrix thead th {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--navy-60);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 10px;
+  border-bottom: 2px solid var(--navy-10);
+  text-align: left;
+  white-space: nowrap;
+}
+table.matrix tbody td {
+  padding: 10px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text-secondary);
+}
+table.matrix tbody tr:last-child td { border-bottom: none; }
+table.matrix .cell-tag {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.tag-ax { background: var(--green-light); color: var(--green-dark); }
+.tag-ay { background: var(--teal-light); color: var(--teal); }
+.tag-bx { background: var(--yellow-light); color: var(--yellow-dark); }
+.tag-by { background: var(--amber-light); color: var(--amber); }
+.tag-cx { background: var(--coral-light); color: var(--coral); }
+.tag-cy { background: var(--red-light); color: var(--red-dark); }
+
+/* CALLOUT */
+.callout {
+  background: var(--yellow-light);
+  border-left: 3px solid var(--yellow);
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+}
+.callout-navy {
+  background: var(--navy-05);
+  border-left-color: var(--navy);
+}
+.callout-red {
+  background: var(--red-light);
+  border-left-color: var(--red);
+}
+.callout-green {
+  background: var(--green-light);
+  border-left-color: var(--green);
+}
+.callout h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--navy);
+}
+.callout p {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* PHASE CARD */
+.phase-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  position: relative;
+}
+.phase-card::before {
+  content: attr(data-phase);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--navy-40);
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+.phase-card h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 0.35rem;
+}
+.phase-card .duration {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--yellow-dark);
+  margin-bottom: 0.75rem;
+}
+.task-list {
+  list-style: none;
+  padding: 0;
+}
+.task-list li {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding: 6px 0 6px 24px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.task-list li:last-child { border-bottom: none; }
+.task-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--navy-20);
+  border-radius: 3px;
+}
+.task-list li.critical::before {
+  border-color: var(--red);
+  background: var(--red-light);
+}
+.task-list li strong {
+  color: var(--navy);
+  font-weight: 500;
+}
+
+/* PARAM TABLE */
+table.params {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin: 1rem 0;
+}
+table.params th {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.72rem;
+  color: var(--navy-60);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 10px;
+  border-bottom: 2px solid var(--navy-10);
+  text-align: left;
+}
+table.params td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+table.params tr:last-child td { border-bottom: none; }
+table.params code {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  background: var(--navy-05);
+  padding: 1px 6px;
+  border-radius: 3px;
+  color: var(--navy-80);
+}
+
+/* FOOTER */
+.doc-footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+.doc-footer p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .hero { padding: 2rem 1.25rem 1.75rem; }
+  .container { padding: 1.5rem 1rem 3rem; }
+  .hero h1 { font-size: 1.4rem; }
+  .diagnostic-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div style="max-width: 900px; margin: 0 auto;">
+    <div class="hero-tag">Planificación de inventario &middot; Slim4</div>
+    <h1>Diagnóstico de inventario y plan de parametrización para Tienda Amiga ER</h1>
+    <p class="hero-sub">Marco conceptual para resolver problemas estructurales de clasificación, exceso de stock, quiebres y nivel de servicio en tienda — con hoja de ruta para Slimstock Slim4 integrado con SAP Business One.</p>
+    <div class="hero-meta">
+      <span>8 tiendas + ecommerce</span>
+      <span>SAP Business One + Slim4</span>
+      <span>SCZ &middot; LPZ &middot; CBB</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+
+<!-- SECTION 1: DIAGNOSTIC -->
+<div class="section">
+  <div class="section-number">01</div>
+  <h2>Diagnóstico: los 4 problemas estructurales</h2>
+  <p>Antes de hablar de parámetros, es importante entender cómo se conectan los cuatro síntomas. No son problemas independientes: son eslabones de una misma cadena rota. La mala clasificación es la causa raíz; el exceso, los quiebres y el bajo nivel de servicio son sus consecuencias directas.</p>
+
+  <div class="diagnostic-grid">
+    <div class="diag-card">
+      <div class="icon" style="background: var(--coral-light); color: var(--coral);">1</div>
+      <h4>Mala clasificación de productos</h4>
+      <p>Si no se distingue correctamente entre productos de alta y baja rotación, se compra igual para todos. Slim4 necesita una clasificación ABC/XYZ correcta para aplicar diferentes modelos de pronóstico y políticas de stock.</p>
+    </div>
+    <div class="diag-card">
+      <div class="icon" style="background: var(--amber-light); color: var(--amber);">2</div>
+      <h4>Exceso de stock en baja rotación</h4>
+      <p>Productos C/CZ con stock safety igual que los A. Se compran lotes grandes para conseguir descuento o por hábito, sin considerar que la demanda real es mínima. El capital queda atrapado.</p>
+    </div>
+    <div class="diag-card">
+      <div class="icon" style="background: var(--red-light); color: var(--red);">3</div>
+      <h4>Quiebres en alta demanda</h4>
+      <p>Productos A/AX sin stock safety adecuado. Lead times de proveedor no reflejan la realidad (especialmente importaciones). El punto de reorden se calcula con parámetros estáticos desactualizados.</p>
+    </div>
+    <div class="diag-card">
+      <div class="icon" style="background: var(--navy-05); color: var(--navy);">4</div>
+      <h4>Bajo nivel de servicio en tienda</h4>
+      <p>Aunque haya stock en el CD, el producto no llega a la tienda correcta. La reposición inter-tienda y la asignación por demanda local no están parametrizadas en Slim4.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <h4>Cadena causal</h4>
+    <p>Clasificación incorrecta → niveles de servicio idénticos para todo → safety stock mal dimensionado → exceso donde no importa y falta donde sí importa → quiebres en tienda a pesar de tener inventario en la red.</p>
+  </div>
+</div>
+
+<!-- SECTION 2: CONCEPTUAL FRAMEWORK -->
+<div class="section">
+  <div class="section-number">02</div>
+  <h2>Marco conceptual: de la demanda a la reposición</h2>
+  <p>Un sistema de planificación bien parametrizado sigue una secuencia lógica donde cada capa alimenta a la siguiente. Slim4 cubre todas estas capas, pero necesita que los parámetros de entrada estén correctamente definidos.</p>
+
+  <div class="flow-wrapper">
+    <div class="flow-title">Flujo de parametrización end-to-end</div>
+    <div class="flow-horizontal">
+      <div class="flow-step">
+        <div class="flow-step-box active">
+          <div class="flow-step-num">01</div>
+          <div class="flow-step-name">Clasificación ABC/XYZ</div>
+          <div class="flow-step-label">Segmentar el catálogo</div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-box">
+          <div class="flow-step-num">02</div>
+          <div class="flow-step-name">Nivel de servicio</div>
+          <div class="flow-step-label">Target por segmento</div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-box">
+          <div class="flow-step-num">03</div>
+          <div class="flow-step-name">Pronóstico de demanda</div>
+          <div class="flow-step-label">Modelo por patrón</div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-box">
+          <div class="flow-step-num">04</div>
+          <div class="flow-step-name">Safety stock &amp; ROP</div>
+          <div class="flow-step-label">Colchón + punto de reorden</div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-box">
+          <div class="flow-step-num">05</div>
+          <div class="flow-step-name">Compra / EOQ</div>
+          <div class="flow-step-label">Cuánto y cuándo</div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-step-box">
+          <div class="flow-step-num">06</div>
+          <div class="flow-step-name">Reposición a tienda</div>
+          <div class="flow-step-label">Distribución granular</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.1 ABC/XYZ -->
+  <h3>2.1 Clasificación ABC/XYZ multidimensional</h3>
+  <p>La clasificación ABC segmenta por importancia económica (ventas, margen, líneas de pedido) y la XYZ por variabilidad de la demanda (estable, variable, esporádica). La combinación de ambas da una matriz de 9 celdas que permite aplicar políticas diferenciadas. Slim4 hace esto automáticamente, pero necesita que se definan correctamente los criterios y umbrales.</p>
+
+  <div class="callout callout-navy">
+    <h4>Criterios recomendados para Tienda Amiga</h4>
+    <p><strong>Eje ABC:</strong> Ventas en Bs (últimos 12 meses) como criterio primario, líneas de pedido como secundario. Cortes: A = 80% acumulado, B = siguiente 15%, C = último 5%.<br>
+    <strong>Eje XYZ:</strong> Coeficiente de variación (CV) de la demanda semanal. X = CV &lt; 0.5 (predecible), Y = CV 0.5–1.0 (variable), Z = CV &gt; 1.0 (errática o esporádica).</p>
+  </div>
+
+  <div class="matrix-wrapper">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>Segmento</th>
+          <th>Perfil</th>
+          <th>Nivel de servicio</th>
+          <th>Política de stock</th>
+          <th>Modelo de pronóstico</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="cell-tag tag-ax">AX</span></td>
+          <td>Alto valor, demanda estable</td>
+          <td>97–99%</td>
+          <td>Safety stock ajustado, reposición continua</td>
+          <td>Suavización exponencial / Holt-Winters</td>
+        </tr>
+        <tr>
+          <td><span class="cell-tag tag-ay">AY</span></td>
+          <td>Alto valor, demanda variable</td>
+          <td>95–97%</td>
+          <td>Safety stock más alto para absorber variabilidad</td>
+          <td>Holt-Winters con componente estacional</td>
+        </tr>
+        <tr>
+          <td><span class="cell-tag tag-bx">BX</span></td>
+          <td>Valor medio, demanda estable</td>
+          <td>93–95%</td>
+          <td>Safety stock moderado, revisión semanal</td>
+          <td>Media móvil ponderada</td>
+        </tr>
+        <tr>
+          <td><span class="cell-tag tag-by">BY</span></td>
+          <td>Valor medio, demanda variable</td>
+          <td>90–93%</td>
+          <td>Safety stock moderado-alto, alertas de desviación</td>
+          <td>Suavización exponencial adaptativa</td>
+        </tr>
+        <tr>
+          <td><span class="cell-tag tag-cx">CX</span></td>
+          <td>Bajo valor, demanda estable</td>
+          <td>85–90%</td>
+          <td>Min/Max con revisión bimestral</td>
+          <td>Media simple o demanda manual</td>
+        </tr>
+        <tr>
+          <td><span class="cell-tag tag-cy">CZ</span></td>
+          <td>Bajo valor, demanda errática</td>
+          <td>75–85%</td>
+          <td>Make-to-order o stock mínimo; evaluar deslistar</td>
+          <td>Croston / demanda intermitente</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-red">
+    <h4>Error frecuente en Tienda Amiga</h4>
+    <p>Tratar a todos los SKUs con un nivel de servicio del 90% parejo. Esto genera sobrestock en CZ (donde bastaría 80%) y substock en AX (donde debería estar al 98%). El costo de quiebre de un iPhone es muy diferente al de una funda genérica.</p>
+  </div>
+
+  <!-- 2.2 SERVICE LEVELS -->
+  <h3>2.2 Niveles de servicio diferenciados</h3>
+  <p>El nivel de servicio define la probabilidad de no tener quiebre durante el ciclo de reposición. Es el parámetro que más impacta en el safety stock. Slim4 permite definir niveles diferenciados por clasificación ABC/XYZ, y también simular el impacto de cambiarlos sobre el inventario promedio y los días de stock.</p>
+  <p>Para Tienda Amiga, la recomendación es definir los niveles en función de la clasificación y del canal. Un producto AX en tienda física de Santa Cruz (mayor volumen) puede necesitar un nivel de servicio más alto que el mismo producto en el ecommerce, donde hay un buffer de tiempo de entrega que permite reaccionar.</p>
+
+  <!-- 2.3 FORECASTING -->
+  <h3>2.3 Pronóstico de demanda por patrón</h3>
+  <p>Slim4 identifica automáticamente el patrón de demanda de cada SKU (constante, tendencia, estacional, intermitente, nuevo, end-of-life) y asigna el modelo estadístico más adecuado. Pero esto funciona bien solo si:</p>
+  <div class="callout callout-green">
+    <h4>Prerequisitos para un buen pronóstico en Slim4</h4>
+    <p>1. <strong>Datos limpios:</strong> Asegurarse de que SAP Business One envía ventas reales (no solo facturación), separando ventas normales de ventas promocionales o outliers. Verificar que la integración SAP B1 → Slim4 transmite correctamente las transacciones de venta, devoluciones y ajustes de inventario.<br>
+    2. <strong>Horizonte correcto:</strong> Mínimo 24 meses de historia para detectar estacionalidad. Tienda Amiga en Bolivia tiene estacionalidad fuerte (Navidad, Carnaval, Día de la Madre, Black Friday).<br>
+    3. <strong>Granularidad por ubicación:</strong> Configurar pronósticos a nivel SKU × tienda, no solo SKU agregado. La demanda de un Samsung Galaxy en Santa Cruz puede ser 3x mayor que en Oruro.<br>
+    4. <strong>Ciclo de vida:</strong> Marcar productos nuevos (sin historia) y productos en fase de descontinuación para que Slim4 use modelos específicos.</p>
+  </div>
+
+  <!-- 2.4 SAFETY STOCK & ROP -->
+  <h3>2.4 Safety stock y punto de reorden</h3>
+  <p>El safety stock es el colchón que protege contra la variabilidad de la demanda y del lead time del proveedor. El punto de reorden (ROP) es el nivel de inventario que dispara una nueva orden. Slim4 calcula ambos dinámicamente, pero necesita parámetros de entrada correctos.</p>
+  <p>La fórmula conceptual que usa Slim4 internamente es:</p>
+  <div class="callout callout-navy">
+    <h4>Fórmula base del safety stock</h4>
+    <p><code style="font-family: 'DM Mono', monospace; font-size: 0.85rem; background: rgba(15,27,61,0.08); padding: 2px 8px; border-radius: 4px;">SS = Z × √(LT × σ²d + d² × σ²LT)</code><br><br>
+    Donde <strong>Z</strong> = factor de servicio (del nivel de servicio target), <strong>LT</strong> = lead time promedio, <strong>σd</strong> = desviación estándar de la demanda, <strong>d</strong> = demanda promedio, <strong>σLT</strong> = desviación estándar del lead time.<br><br>
+    <strong>ROP = d × LT + SS</strong></p>
+  </div>
+  <p>Los errores típicos en la parametrización son: usar lead times nominales del proveedor (no los reales históricos, que en Bolivia suelen ser mayores por aduanas y logística), no actualizar la variabilidad de la demanda cuando cambia el patrón del producto, y aplicar un Z-score uniforme cuando debería variar por segmento ABC/XYZ.</p>
+
+  <!-- 2.5 PURCHASING / EOQ -->
+  <h3>2.5 Compra y EOQ</h3>
+  <p>Slim4 calcula la cantidad económica de pedido (EOQ) balanceando el costo de ordenar vs. el costo de mantener inventario. Para Tienda Amiga, los parámetros clave son:</p>
+  <p>El costo de mantener inventario (holding cost) que incluye almacenamiento, capital inmovilizado y obsolescencia; el costo por orden de compra (costos fijos de procesar una OC, incluye logística de importación cuando aplica); y las restricciones del proveedor como mínimos de compra (MOQ), incrementos, y ventanas de entrega.</p>
+  <p>Un error frecuente es comprar volúmenes grandes para obtener descuento por volumen en productos CZ, donde el ahorro en precio se pierde por el costo de tener ese stock meses sin moverse.</p>
+
+  <!-- 2.6 STORE REPLENISHMENT -->
+  <h3>2.6 Reposición a tienda (el eslabón faltante)</h3>
+  <p>Este es probablemente el punto más crítico para Tienda Amiga. El inventario puede estar bien planificado a nivel CD, pero si la reposición a cada tienda no está parametrizada correctamente, se generan quiebres en punto de venta aunque haya stock en la red.</p>
+
+  <div class="callout">
+    <h4>Parametrización de reposición por tienda en Slim4</h4>
+    <p><strong>Demanda local:</strong> Slim4 debe calcular pronósticos a nivel SKU × ubicación. Cada tienda tiene su propio patrón de demanda.<br>
+    <strong>Capacidad de exhibición:</strong> Definir la presentación mínima (facing) y máxima por tienda. No se puede enviar 50 unidades si la góndola solo exhibe 8.<br>
+    <strong>Frecuencia de reposición:</strong> Configurar ciclos de reposición por tienda (diario, cada 2 días, semanal) según cercanía al CD y volumen.<br>
+    <strong>Network balancing:</strong> Habilitar la redistribución automática: si una tienda tiene exceso y otra está por debajo del punto de reorden, Slim4 puede sugerir transferencias inter-tienda.</p>
+  </div>
+</div>
+
+<!-- SECTION 3: EXCESS STOCK ANALYSIS & DRAIN PLAN -->
+<div class="section">
+  <div class="section-number">03</div>
+  <h2>Exceso de stock: diagnóstico, drenaje y prevención</h2>
+  <p>El exceso de stock es el problema más inmediato y visible de Tienda Amiga. Antes de optimizar la planificación futura, es necesario entender cómo se identifica, cuantificarlo y ejecutar un plan estructurado para drenarlo — y luego establecer los controles que impidan que se vuelva a generar.</p>
+
+  <h3>3.1 Cómo define Slim4 el exceso de stock</h3>
+  <p>Slim4 calcula el exceso comparando el stock actual contra el stock máximo óptimo, que a su vez se deriva del pronóstico de demanda, el safety stock y la cantidad de reposición (EOQ). La lógica es la siguiente:</p>
+
+  <div class="flow-wrapper">
+    <div class="flow-title">Fórmula de cálculo del exceso en Slim4</div>
+    <div style="padding: 0.5rem 0;">
+      <div style="background: var(--navy-05); border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1rem;">
+        <div style="font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--navy-80); line-height: 2;">
+          <div><span style="color: var(--navy-40);">① Stock máximo</span></div>
+          <div style="padding-left: 1.5rem;"><code style="background: rgba(15,27,61,0.08); padding: 2px 8px; border-radius: 4px;">Stock Máximo = ROP + EOQ</code></div>
+          <div style="padding-left: 1.5rem; font-size: 0.75rem; color: var(--text-muted);">donde ROP = (Lead time × Demanda promedio diaria) + Safety Stock</div>
+
+          <div style="margin-top: 0.75rem;"><span style="color: var(--navy-40);">② Exceso de stock</span></div>
+          <div style="padding-left: 1.5rem;"><code style="background: rgba(15,27,61,0.08); padding: 2px 8px; border-radius: 4px;">Exceso = Stock actual − Stock Máximo</code></div>
+          <div style="padding-left: 1.5rem; font-size: 0.75rem; color: var(--text-muted);">Si el resultado es positivo → hay exceso. Si es negativo → el stock está dentro de parámetros.</div>
+
+          <div style="margin-top: 0.75rem;"><span style="color: var(--navy-40);">③ Cobertura en días</span></div>
+          <div style="padding-left: 1.5rem;"><code style="background: rgba(15,27,61,0.08); padding: 2px 8px; border-radius: 4px;">Días de stock = Stock actual ÷ Demanda promedio diaria</code></div>
+          <div style="padding-left: 1.5rem; font-size: 0.75rem; color: var(--text-muted);">Slim4 compara este valor contra los días óptimos (derivados del EOQ + SS). El delta es el exceso expresado en días.</div>
+
+          <div style="margin-top: 0.75rem;"><span style="color: var(--navy-40);">④ Valor del exceso</span></div>
+          <div style="padding-left: 1.5rem;"><code style="background: rgba(15,27,61,0.08); padding: 2px 8px; border-radius: 4px;">Valor exceso = Unidades excedentes × Costo unitario promedio</code></div>
+          <div style="padding-left: 1.5rem; font-size: 0.75rem; color: var(--text-muted);">Este es el capital inmovilizado que se puede liberar. Slim4 lo muestra en dashboards y KPIs.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-red">
+    <h4>¿Por qué Slim4 detecta exceso aunque alguien piense que no lo hay?</h4>
+    <p>Slim4 calcula el stock máximo en base al pronóstico <strong>futuro</strong>, no al histórico. Si un producto vendía 100 unidades/mes hace 6 meses pero ahora su pronóstico es de 40 unidades/mes (porque cambió de fase en su ciclo de vida, o porque el mercado cambió), Slim4 lo marcará como exceso aunque "siempre se haya comprado esa cantidad". El punto es precisamente ese: la compra no se actualizó cuando la demanda bajó.</p>
+  </div>
+
+  <p>Adicionalmente, Slim4 clasifica el inventario en capas de riesgo según antigüedad. Estas capas son clave para priorizar las acciones de drenaje:</p>
+
+  <div class="matrix-wrapper">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>Capa de inventario</th>
+          <th>Definición</th>
+          <th>Riesgo</th>
+          <th>Acción típica</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="cell-tag tag-ax" style="background: var(--green-light); color: var(--green-dark);">Saludable</span></td>
+          <td>Stock ≤ stock máximo y ≤ 90 días de cobertura</td>
+          <td>Bajo</td>
+          <td>Ninguna, mantener</td>
+        </tr>
+        <tr>
+          <td><span class="cell-tag tag-bx">Exceso leve</span></td>
+          <td>Stock > stock máximo, pero < 120 días de cobertura</td>
+          <td>Medio</td>
+          <td>Frenar compra, dejar que la demanda lo absorba</td>
+        </tr>
+        <tr>
+          <td><span class="cell-tag tag-cx">Exceso moderado</span></td>
+          <td>120–180 días de cobertura sin movimiento suficiente</td>
+          <td>Alto</td>
+          <td>Promoción, bundling, redistribución entre tiendas</td>
+        </tr>
+        <tr>
+          <td><span class="cell-tag tag-cy">Exceso crítico / Obsoleto</span></td>
+          <td>> 180 días de cobertura o sin venta en últimos 90 días</td>
+          <td>Muy alto</td>
+          <td>Liquidación, donación, devolución a proveedor, deslistamiento</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>3.2 Plan de drenaje de exceso: acciones para el equipo comercial</h3>
+  <p>El objetivo del plan de drenaje es recuperar el mayor valor posible del capital atrapado en inventario excedente, priorizando las acciones según la capa de riesgo y la clasificación ABC/XYZ del producto. El equipo comercial debe liderar este plan con soporte de planificación y marketing.</p>
+
+  <!-- DRAIN PHASE 1 -->
+  <div class="phase-card" data-phase="Inmediato">
+    <h4>Paso 1: Congelar compras de productos en exceso</h4>
+    <div class="duration">Acción inmediata &middot; Planificación + Compras</div>
+    <ul class="task-list">
+      <li class="critical"><strong>Bloquear reposición automática en Slim4:</strong> Para todos los SKUs con cobertura > 120 días, desactivar temporalmente la generación automática de órdenes de compra. Slim4 permite configurar esto con business rules o cambio de stocking policy a "non-stocked" temporal.</li>
+      <li class="critical"><strong>Revisar OC pendientes:</strong> Verificar en SAP Business One si hay órdenes de compra abiertas para productos en exceso que aún no se recibieron. Cancelar o reducir cantidades donde sea posible sin penalización del proveedor.</li>
+      <li><strong>Generar lista priorizada:</strong> Exportar desde Slim4 la lista de productos con exceso, ordenada por valor de exceso (Bs) descendente. Esta lista es el insumo para las acciones comerciales.</li>
+    </ul>
+  </div>
+
+  <!-- DRAIN PHASE 2 -->
+  <div class="phase-card" data-phase="Semana 1–2">
+    <h4>Paso 2: Acciones comerciales por capa de riesgo</h4>
+    <div class="duration">Semana 1–2 &middot; Equipo Comercial + Marketing</div>
+    <ul class="task-list">
+      <li><strong>Exceso leve (90–120 días):</strong> No requiere descuento. Incrementar visibilidad en tienda (exhibición preferencial, cabeceras de góndola). En ecommerce, mejorar posicionamiento en categoría y agregar a carrouseles de "Recomendados". Dar prioridad en reposición interna (redistribuir a tiendas donde el producto tiene mejor rotación).</li>
+      <li><strong>Exceso moderado (120–180 días):</strong> Crear bundles con productos de alta rotación (ej: funda + cargador con descuento al comprar un celular). Ofertas por volumen (lleva 2, paga 1.5). Campañas flash de 48h en redes sociales y web. Negociar con proveedores crédito o extensión de plazo de pago para ese lote.</li>
+      <li class="critical"><strong>Exceso crítico (> 180 días):</strong> Liquidación agresiva con descuento del 30–50%. Canal outlet (sección dedicada en web o espacio físico). Devolución a proveedor si el acuerdo comercial lo permite. Donación con beneficio fiscal si aplica. Evaluar venta a mayoristas o marketplaces secundarios. Para productos tecnológicos, cada mes adicional deprecia el valor de reventa.</li>
+      <li><strong>Productos sin venta en 90+ días:</strong> Revisión de deslistamiento. Si el producto no tiene potencial comercial futuro (modelo descontinuado, versión anterior), iniciar proceso de baja en SAP B1 y Slim4. No permitir que sigan ocupando espacio y generando costo de almacenamiento.</li>
+    </ul>
+  </div>
+
+  <!-- DRAIN PHASE 3 -->
+  <div class="phase-card" data-phase="Continuo">
+    <h4>Paso 3: Seguimiento y métricas de drenaje</h4>
+    <div class="duration">Semanal &middot; Planificación + Comercial</div>
+    <ul class="task-list">
+      <li><strong>Dashboard de drenaje semanal:</strong> Medir la evolución del valor de exceso en Bs semana a semana. Target: reducir el valor de exceso un 30% en los primeros 60 días.</li>
+      <li><strong>Velocidad de drenaje por categoría:</strong> Monitorear qué categorías están respondiendo a las acciones y cuáles no. Ajustar la estrategia (más descuento, cambio de canal) según resultados.</li>
+      <li><strong>Margen recuperado vs. margen perdido:</strong> Para cada acción de liquidación, registrar el margen real vs. el margen original. El objetivo no es recuperar el 100% — es liberar capital que se reinvierte en productos que sí rotan.</li>
+    </ul>
+  </div>
+
+  <h3>3.3 Prevención: controles para no volver a comprar de más</h3>
+  <p>Drenar el exceso actual es urgente, pero si no se instalan los controles correctos, el problema se regenera en 3–6 meses. Las causas raíz más comunes de sobrecompra en retail son: compra manual sin respaldo de pronóstico, compra por descuento de volumen sin analizar el costo total, y falta de visibilidad del stock en tránsito.</p>
+
+  <div class="matrix-wrapper">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>Causa raíz de sobrecompra</th>
+          <th>Control en Slim4</th>
+          <th>Proceso complementario</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Compra manual basada en "intuición" o hábito del comprador</td>
+          <td>Hacer obligatorio el uso de la sugerencia de compra de Slim4 como base. Cualquier desvío de la sugerencia debe justificarse y quedar registrado como excepción.</td>
+          <td>Política: ninguna OC en SAP B1 se emite sin validación contra la sugerencia de Slim4. Crear un campo en SAP para registrar la razón del desvío.</td>
+        </tr>
+        <tr>
+          <td>Compra por descuento de volumen sin análisis de costo total</td>
+          <td>Configurar en Slim4 alertas cuando una OC supera el stock máximo en más de 20%. Usar la simulación de días de inventario para mostrar el impacto antes de confirmar.</td>
+          <td>Antes de aceptar un descuento por volumen, calcular: ¿el ahorro en precio compensa el costo de holding por X meses adicionales? Si el holding cost anual es ~25% del valor, un descuento del 5% no justifica 6 meses de stock extra.</td>
+        </tr>
+        <tr>
+          <td>No se considera el stock en tránsito al generar la OC</td>
+          <td>Verificar que la integración SAP B1 → Slim4 incluye las OC abiertas y el stock en tránsito. Slim4 debe restar el stock en tránsito del requerimiento antes de sugerir una nueva compra.</td>
+          <td>Auditoría mensual: comparar OC abiertas en SAP B1 vs. lo que Slim4 ve como "incoming supply". Si hay discrepancia, la integración necesita ajuste.</td>
+        </tr>
+        <tr>
+          <td>Pronóstico inflado por ventas atípicas (promociones, eventos)</td>
+          <td>Marcar en Slim4 las ventas promocionales como "eventos" para que no inflen el pronóstico base. Slim4 permite separar demanda orgánica de demanda promocional.</td>
+          <td>Proceso post-campaña: después de cada promoción fuerte (Black Friday, Navidad), revisar que Slim4 no haya incorporado el pico como "nueva normalidad".</td>
+        </tr>
+        <tr>
+          <td>Falta de revisión periódica de productos en declive</td>
+          <td>Configurar alertas de ciclo de vida en Slim4: cuando un SKU pasa de "Madurez" a "Declive", Slim4 debe reducir automáticamente el nivel de servicio y el safety stock, y alertar al planificador.</td>
+          <td>Reunión mensual Comercial + Planning: revisar los productos que Slim4 marcó como en declive. Decidir: reducir stock, liquidar, o deslistar.</td>
+        </tr>
+        <tr>
+          <td>Open-to-Buy (OTB) sin control de tope</td>
+          <td>Activar el módulo OTB de Slim4 para que las sugerencias de compra respeten el presupuesto asignado por categoría. Si el OTB de una categoría se agota, Slim4 no debe generar más sugerencias hasta el siguiente período.</td>
+          <td>Presupuesto de compra mensual por categoría, aprobado por Gerencia. El comprador no puede exceder el OTB sin autorización explícita.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-green">
+    <h4>Regla de oro para prevenir sobrecompra</h4>
+    <p>Nunca comprar más que el stock máximo calculado por Slim4 sin justificación escrita. La fórmula es simple: si el <strong>stock actual + stock en tránsito + nueva OC > Stock Máximo</strong>, la orden es excesiva. Slim4 puede configurarse para mostrar una alerta visual cuando esto ocurre, y el comprador debe documentar por qué procede (ej: oportunidad de compra irrepetible, anticipo de temporada). Si no hay justificación, la OC se reduce.</p>
+  </div>
+</div>
+
+<!-- SECTION 4: SLIM4 PARAMETRIZATION PLAN -->
+<div class="section">
+  <div class="section-number">04</div>
+  <h2>Plan de parametrización Slim4: fases y tareas</h2>
+  <p>El plan se estructura en 6 fases secuenciales. Cada fase tiene prerequisitos de la anterior. La duración total estimada es 10–14 semanas, asumiendo dedicación del equipo de planificación y soporte de Slimstock. La Fase 3 (drenaje de exceso) se ejecuta en paralelo con las fases técnicas.</p>
+
+  <!-- PHASE 1 -->
+  <div class="phase-card" data-phase="Fase 1">
+    <h4>Auditoría de datos y limpieza</h4>
+    <div class="duration">Semana 1–2 &middot; Prerequisito para todo lo demás</div>
+    <ul class="task-list">
+      <li class="critical"><strong>Validar integración SAP Business One → Slim4:</strong> Verificar que las ventas se envían correctamente desde SAP B1, separando devoluciones, anulaciones y ventas internas (traspasos entre tiendas). Revisar que la data de stock en tránsito, stock reservado y stock disponible se sincronice. Confirmar que los documentos de entrada de mercancía (Goods Receipt PO) alimentan correctamente los lead times históricos en Slim4.</li>
+      <li class="critical"><strong>Auditar lead times reales:</strong> Comparar los lead times configurados en Slim4 vs. los lead times históricos reales (fecha de OC a fecha de recepción en CD). Para importaciones desde China, considerar el lead time completo incluyendo tránsito, aduana en Bolivia y distribución interna.</li>
+      <li><strong>Limpiar maestro de artículos:</strong> Identificar SKUs duplicados, productos descontinuados que siguen activos, y productos nuevos sin datos maestros completos (categoría, proveedor, MOQ, unidad de compra).</li>
+      <li><strong>Establecer baseline de KPIs:</strong> Medir el estado actual: valor de inventario por clasificación, tasa de quiebre por tienda, fill rate, días de inventario, y porcentaje de stock obsoleto (&gt; 180 días sin venta).</li>
+    </ul>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-card" data-phase="Fase 2">
+    <h4>Reclasificación ABC/XYZ</h4>
+    <div class="duration">Semana 3–4 &middot; La base de toda la optimización</div>
+    <ul class="task-list">
+      <li class="critical"><strong>Configurar clasificación multidimensional:</strong> Definir en Slim4 los dos ejes — ABC por ventas en Bs (primario) y por líneas de pedido (secundario), XYZ por coeficiente de variación semanal. Definir los cortes: A=80%, B=15%, C=5% | X&lt;0.5, Y=0.5–1.0, Z&gt;1.0.</li>
+      <li class="critical"><strong>Ejecutar clasificación por ubicación:</strong> Un mismo SKU puede ser AX en Santa Cruz y BY en Cochabamba. Configurar Slim4 para clasificar a nivel SKU × storeview cuando el volumen lo justifique.</li>
+      <li><strong>Revisar resultados y ajustar:</strong> Validar que la clasificación tiene sentido comercial. Casos de ajuste manual: productos estratégicos que por ventas serían C pero son tráfico en tienda, o productos nuevos sin historia.</li>
+      <li><strong>Mapear ciclo de vida:</strong> Marcar cada SKU en Slim4 como: Introducción, Crecimiento, Madurez, Declive, o End-of-life. Esto afecta qué modelo de pronóstico se usa.</li>
+    </ul>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase-card" data-phase="Fase 3">
+    <h4>Drenaje de exceso de stock (en paralelo)</h4>
+    <div class="duration">Semana 3–8 &middot; Se ejecuta en paralelo con las fases técnicas &middot; Comercial lidera</div>
+    <ul class="task-list">
+      <li class="critical"><strong>Ejecutar el plan de drenaje de la Sección 03:</strong> Con la reclasificación ABC/XYZ de Fase 2 terminada, generar el reporte de exceso por capa de riesgo desde Slim4. Entregar al equipo comercial la lista priorizada por valor de exceso.</li>
+      <li class="critical"><strong>Congelar compras de SKUs en exceso:</strong> Cambiar la política de stock en Slim4 para productos con > 120 días de cobertura. Cancelar o reducir OC pendientes en SAP B1.</li>
+      <li><strong>Ejecutar acciones comerciales por capa:</strong> Leve → redistribuir y mejorar exhibición. Moderado → bundles, promociones, venta flash. Crítico → liquidación, outlet, devolución a proveedor. Sin venta 90+ días → deslistamiento.</li>
+      <li><strong>Instalar controles de prevención:</strong> Configurar alertas de exceso en Slim4 (OC > stock máximo), activar OTB por categoría, y establecer la política de justificación escrita para desvíos de la sugerencia de compra.</li>
+      <li><strong>Seguimiento semanal:</strong> Dashboard de evolución del valor de exceso en Bs. Reunión semanal de 30 min entre Planning y Comercial para revisar avance y ajustar acciones.</li>
+    </ul>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase-card" data-phase="Fase 4">
+    <h4>Niveles de servicio y safety stock</h4>
+    <div class="duration">Semana 7–8 &middot; Diferenciación que resuelve exceso y quiebres</div>
+    <ul class="task-list">
+      <li class="critical"><strong>Asignar nivel de servicio por segmento ABC/XYZ:</strong> Configurar en Slim4 la matriz de niveles de servicio según la tabla del punto 2.1. Simular el impacto en safety stock e inventario promedio usando la herramienta de simulación de Slim4.</li>
+      <li class="critical"><strong>Parametrizar lead times reales:</strong> Cargar los lead times verificados en Fase 1. Configurar la desviación estándar del lead time por proveedor. Para proveedores de importación (ej. distribuidores de celulares desde Miami/China), considerar lead time total = orden + tránsito + aduana + distribución interna.</li>
+      <li><strong>Configurar reglas de stock mínimo y máximo:</strong> Para productos CZ, definir política Min/Max en lugar de ROP+EOQ. Para productos AX, habilitar reposición continua.</li>
+      <li><strong>Definir política para productos de demanda intermitente:</strong> Configurar el modelo de Croston para productos con demanda esporádica (ej. accesorios especializados). Decidir qué productos CZ deberían pasar a make-to-order o deslistarse.</li>
+    </ul>
+
+    <div style="margin-top: 1rem;">
+    <table class="params">
+      <thead>
+        <tr>
+          <th>Parámetro Slim4</th>
+          <th>Segmento</th>
+          <th>Valor recomendado</th>
+          <th>Notas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>Service level %</code></td>
+          <td><span class="cell-tag tag-ax">AX</span></td>
+          <td>98%</td>
+          <td>Máxima disponibilidad para productos estrella</td>
+        </tr>
+        <tr>
+          <td><code>Service level %</code></td>
+          <td><span class="cell-tag tag-by">BY</span></td>
+          <td>92%</td>
+          <td>Balance entre disponibilidad e inversión</td>
+        </tr>
+        <tr>
+          <td><code>Service level %</code></td>
+          <td><span class="cell-tag tag-cy">CZ</span></td>
+          <td>80%</td>
+          <td>Liberar capital de productos de cola larga</td>
+        </tr>
+        <tr>
+          <td><code>Lead time (days)</code></td>
+          <td>Nacional</td>
+          <td>3–7 días reales</td>
+          <td>Validar con histórico de recepción</td>
+        </tr>
+        <tr>
+          <td><code>Lead time (days)</code></td>
+          <td>Importación</td>
+          <td>30–60 días reales</td>
+          <td>Incluir aduana boliviana</td>
+        </tr>
+        <tr>
+          <td><code>LT std. deviation</code></td>
+          <td>Importación</td>
+          <td>5–15 días</td>
+          <td>Mayor variabilidad = más safety stock</td>
+        </tr>
+        <tr>
+          <td><code>Review period</code></td>
+          <td><span class="cell-tag tag-ax">AX</span></td>
+          <td>Diario</td>
+          <td>Revisión continua de reposición</td>
+        </tr>
+        <tr>
+          <td><code>Review period</code></td>
+          <td><span class="cell-tag tag-cx">CX</span></td>
+          <td>Quincenal</td>
+          <td>Menor frecuencia de revisión</td>
+        </tr>
+        <tr>
+          <td><code>Stocking policy</code></td>
+          <td><span class="cell-tag tag-cy">CZ</span></td>
+          <td>Non-stocked / MTO</td>
+          <td>Evaluar deslistamiento</td>
+        </tr>
+        <tr>
+          <td><code>Forecast model</code></td>
+          <td><span class="cell-tag tag-cy">CZ</span></td>
+          <td>Croston</td>
+          <td>Demanda intermitente</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase-card" data-phase="Fase 5">
+    <h4>Compra optimizada y reglas de proveedor</h4>
+    <div class="duration">Semana 9–10 &middot; Alinear la compra con la demanda real</div>
+    <ul class="task-list">
+      <li><strong>Configurar EOQ por proveedor:</strong> Cargar costos de ordenar y holding cost. Configurar MOQs, incrementos de compra y calendarios de entrega por proveedor.</li>
+      <li><strong>Definir reglas de agrupación de órdenes:</strong> Para proveedores con múltiples SKUs, configurar ventanas de compra consolidada que optimicen el costo total (flete + precio + holding).</li>
+      <li class="critical"><strong>Configurar alertas de excepción:</strong> Activar Management by Exception de Slim4 para: órdenes de compra tardías, desviaciones de pronóstico &gt; 30%, quiebres inminentes (stock &lt; safety stock + 3 días de demanda), y exceso de stock (&gt; 120 días de inventario en productos CZ).</li>
+      <li><strong>Definir Open-to-Buy (OTB):</strong> Integrar presupuesto de compra con las recomendaciones de Slim4 para que las órdenes no excedan los límites financieros.</li>
+    </ul>
+  </div>
+
+  <!-- PHASE 6 -->
+  <div class="phase-card" data-phase="Fase 6">
+    <h4>Reposición a tienda y network balancing</h4>
+    <div class="duration">Semana 11–14 &middot; El impacto más visible al cliente final</div>
+    <ul class="task-list">
+      <li class="critical"><strong>Configurar pronósticos por tienda:</strong> Activar forecasting a nivel SKU × tienda. Definir el horizonte de reposición por tienda según distancia al CD y frecuencia de envío.</li>
+      <li class="critical"><strong>Parametrizar niveles de presentación:</strong> Para cada tienda × categoría, definir Min de presentación (nunca menos de X unidades en góndola) y Max de capacidad. Slim4 debe respetar estos límites al calcular la reposición.</li>
+      <li><strong>Habilitar network balancing:</strong> Configurar reglas de redistribución automática entre tiendas. Si la tienda de Santa Cruz tiene 45 días de stock de un SKU y la de La Paz tiene 3 días, Slim4 debe sugerir la transferencia.</li>
+      <li><strong>Configurar reposición del ecommerce:</strong> El stock del canal online debe tener su propio pronóstico y safety stock, calculado sobre la demanda web, no sobre el promedio de las tiendas físicas.</li>
+      <li><strong>Dashboards de nivel de servicio en tienda:</strong> Configurar KPIs en Slim4 por tienda: fill rate, tasa de quiebre, días de stock, y alertas de productos AX con stock &lt; 1 semana.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- SECTION 5: GOVERNANCE -->
+<div class="section">
+  <div class="section-number">05</div>
+  <h2>Gobernanza continua: mantener los parámetros vivos</h2>
+  <p>La parametrización no es un evento único. Los parámetros deben revisarse periódicamente porque la demanda cambia, los proveedores cambian, y el catálogo evoluciona.</p>
+
+  <div class="matrix-wrapper">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>Actividad</th>
+          <th>Frecuencia</th>
+          <th>Responsable</th>
+          <th>En Slim4</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Revisión de clasificación ABC/XYZ</td>
+          <td>Mensual (automática) + revisión trimestral manual</td>
+          <td>Planificador de demanda</td>
+          <td>Dynamic Segmentation</td>
+        </tr>
+        <tr>
+          <td>Actualización de lead times</td>
+          <td>Mensual por proveedor</td>
+          <td>Compras</td>
+          <td>Supply Management</td>
+        </tr>
+        <tr>
+          <td>Revisión de excepciones</td>
+          <td>Diaria (to-do list)</td>
+          <td>Planificador</td>
+          <td>Management by Exception</td>
+        </tr>
+        <tr>
+          <td>Análisis de exceso y obsolescencia</td>
+          <td>Semanal (durante drenaje), luego quincenal</td>
+          <td>Planificador + Comercial</td>
+          <td>Dashboards / BI + Reporte de exceso por capa</td>
+        </tr>
+        <tr>
+          <td>Auditoría de cumplimiento de OC vs. sugerencia Slim4</td>
+          <td>Mensual</td>
+          <td>Compras + Planificador</td>
+          <td>Comparar OC emitidas en SAP B1 vs. sugerencias de Slim4. Medir % de desvío.</td>
+        </tr>
+        <tr>
+          <td>Calibración de niveles de servicio</td>
+          <td>Trimestral</td>
+          <td>Gerencia Comercial + Supply Chain</td>
+          <td>Service Level Simulation</td>
+        </tr>
+        <tr>
+          <td>Revisión de ciclo de vida de productos</td>
+          <td>Mensual</td>
+          <td>Comercial + Planificador</td>
+          <td>Product Lifecycle Management</td>
+        </tr>
+        <tr>
+          <td>S&OP / IBP</td>
+          <td>Mensual</td>
+          <td>Gerencia General</td>
+          <td>S&OP Module</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-green">
+    <h4>KPIs de éxito post-parametrización</h4>
+    <p><strong>A 3 meses:</strong> Reducción de 25–30% en stock de productos CZ. Reducción de 40% en quiebres de productos AX en tienda. Fill rate en tienda sube de ~85% a ~93%.<br>
+    <strong>A 6 meses:</strong> Inventario total se reduce 15–20% con nivel de servicio general igual o superior. Días de inventario de productos AX baja de 45+ a 25–30 días. Tasa de obsolescencia (&gt; 180 días) baja del 12% al 5%.<br>
+    <strong>A 12 meses:</strong> Capital liberado se redirige a profundizar stock de productos AX. Network balancing reduce transferencias manuales un 60%. Forecast accuracy (MAPE) mejora 15–20 puntos.</p>
+  </div>
+</div>
+
+<!-- SECTION 6: QUICK WINS -->
+<div class="section">
+  <div class="section-number">06</div>
+  <h2>Quick wins: acciones inmediatas (semana 1)</h2>
+  <p>Mientras se ejecuta el plan completo, hay acciones que pueden ejecutarse de inmediato con impacto visible:</p>
+
+  <div class="diagnostic-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+    <div class="diag-card" style="border-left-color: var(--green);">
+      <div class="icon" style="background: var(--green-light); color: var(--green);">✓</div>
+      <h4>Ejecutar ABC/XYZ con criterios actualizados</h4>
+      <p>Solo reclasificar con los cortes correctos ya revela dónde está el dinero atrapado. Exportar la lista de productos CZ con stock &gt; 90 días y compartirla con Comercial para liquidar.</p>
+    </div>
+    <div class="diag-card" style="border-left-color: var(--green);">
+      <div class="icon" style="background: var(--green-light); color: var(--green);">✓</div>
+      <h4>Corregir lead times de los 10 proveedores top</h4>
+      <p>Verificar los lead times reales de los 10 proveedores que representan el 80% de las compras. Corregir en Slim4 de inmediato. Esto ajusta automáticamente los ROP.</p>
+    </div>
+    <div class="diag-card" style="border-left-color: var(--green);">
+      <div class="icon" style="background: var(--green-light); color: var(--green);">✓</div>
+      <h4>Subir nivel de servicio de los top 50 SKUs AX</h4>
+      <p>Identificar los 50 SKUs más vendidos y subir su nivel de servicio a 98% en Slim4. Esto incrementa el safety stock solo donde realmente impacta.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- container -->
+
+<div class="doc-footer">
+  <p>Tienda Amiga ER — Documento de análisis y parametrización Slim4<br>
+  Preparado como guía conceptual para el equipo de planificación de demanda y supply chain<br>
+  <span style="font-family: 'DM Mono', monospace;">Marzo 2026</span></p>
+</div>
+
+</body>
+</html>
